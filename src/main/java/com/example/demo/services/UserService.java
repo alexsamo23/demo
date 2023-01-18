@@ -1,7 +1,9 @@
-package com.example.demo.UserCardServices;
+package com.example.demo.services;
 
-import com.example.demo.CardRepository.CardRepository;
-import com.example.demo.Entities.Card;
+import com.example.demo.entities.User;
+import com.example.demo.repositories.CardRepository;
+import com.example.demo.entities.Card;
+import com.example.demo.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +13,9 @@ import java.util.List;
 public class UserService {
     @Autowired
     private CardRepository cardRepository;
+    @Autowired
+    private UserRepository userRepository;
+
 
   /*  public CreditCard withdraw(int amount, String iban) {
 
@@ -19,6 +24,12 @@ public class UserService {
                 cardRepository.save(card);
                 return card;
     }*/
+    //deposit
+    //checking balance
+
+    public List<User> getAllUsers(){
+        return userRepository.findAll();
+    }
 
     public List<Card> getAllCreditCards(){
         return cardRepository.findAll();

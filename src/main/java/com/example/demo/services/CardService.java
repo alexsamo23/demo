@@ -17,16 +17,6 @@ public class CardService {
         return cardRepository.findAll();
     }
 
-      /*  public CreditCard withdraw(int amount, String iban) {
-
-        CreditCard card = cardRepository.findCreditCardByIBAN(iban);
-                card.setSoldCard(card.getSoldCard() - amount);
-                cardRepository.save(card);
-                return card;
-    }*/
-    //deposit
-    //checking balance
-
     public Card getCardByName(String name) {
         Optional<Card> card = Optional.ofNullable(cardRepository.findCardByName(name));
         if (card.isPresent()) {
@@ -36,7 +26,7 @@ public class CardService {
         }
     }
 
-    public int getSoldByName(String name) {
+    public int checkBalance(String name) {
         Optional<Card> card = Optional.ofNullable(cardRepository.findCardByName(name));
         if (card.isPresent()) {
              return card.get().getSold();
@@ -44,4 +34,21 @@ public class CardService {
             throw new ResourceNotFoundException("Card", "name", name);
         }
     }
+
+    public Card deposit(String name, int amount) {
+        Card card = cardRepository.findCardByName(name);
+        card.setSold(card.getSold()+amount );
+        cardRepository.save(card);
+        return card;
+
+    }
+    public Card withdraw(String name, int amount) {
+        Card card = cardRepository.findCardByName(name);
+        card.setSold(card.getSold()-amount );
+        cardRepository.save(card);
+        return card;
+
+    }
+
+
     }

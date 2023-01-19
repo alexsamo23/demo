@@ -7,10 +7,7 @@ import com.example.demo.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -20,14 +17,21 @@ public class CardController {
     @Autowired
     private CardService cardService;
 
-    //@GetMapping("/users")
-    //public List<User>getAllUsers(){
-   //  return userService.getAllUsers();
- //}
  @GetMapping("/{name}")
- public ResponseEntity<Integer> getSoldByName(@PathVariable("name") String name){
-     return new ResponseEntity<Integer>(cardService.getSoldByName(name), HttpStatus.OK);
+ public ResponseEntity<Integer> checkBalance(@PathVariable("name") String name){
+     return new ResponseEntity<Integer>(cardService.checkBalance(name), HttpStatus.OK);
  }
+
+    @PutMapping("/{name}/deposit/{amount}")
+    public ResponseEntity <Card> deposit(@PathVariable("name") String name,@PathVariable("amount") int amount) {
+      return new ResponseEntity<Card>(cardService.deposit(name,amount), HttpStatus.OK);
+    }
+
+    @PutMapping("/{name}/withdraw/{amount}")
+    public ResponseEntity <Card> withdraw(@PathVariable("name") String name,@PathVariable("amount") int amount) {
+        return new ResponseEntity<Card>(cardService.withdraw(name, amount), HttpStatus.OK);
+    }
+
     @GetMapping("/")
     public List<Card>getAllCreditCards(){
         return cardService.getAllCreditCards();

@@ -9,19 +9,19 @@ import lombok.*;
 public class Card {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @Column(name="number") //not null
-    private String cardNumber;
-    @Column(name="name")
-    private String cardName;
-    @Column(name="cvv")
+    @Column(name="number",nullable = false)
+    private String number;
+    @Column(name="name",nullable = false)
+    private String name;
+    @Column(name="cvv",nullable = false)
     private String cvv;
-    @Column(name="expire")
+    @Column(name="expire",nullable = false)
     private String expireDate;//validare conversie
-    @Column(name="sold")
-    private int soldCard;
-    @Column(name="iban")
+    @Column(name="sold",nullable = false)
+    private int sold;
+    @Column(name="iban",nullable = false)
     private String IBAN;
-    @Column(name="pin")
+    @Column(name="pin",nullable = false)
     private String PIN;
 
 

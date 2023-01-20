@@ -1,10 +1,12 @@
 package com.example.demo.services;
 import java.util.*;
 import com.example.demo.entities.Card;
+import com.example.demo.exceptions.InvalidWithdrawException;
 import com.example.demo.exceptions.ResourceNotFoundException;
 import com.example.demo.repositories.CardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,7 +28,7 @@ public class CardService {
         }
     }
 
-    public int checkBalance(String name) {
+    public int checkBalance(String name) throws ResourceNotFoundException {
         Optional<Card> card = Optional.ofNullable(cardRepository.findCardByName(name));
         if (card.isPresent()) {
              return card.get().getSold();
@@ -42,11 +44,18 @@ public class CardService {
         return card;
 
     }
-    public Card withdraw(String name, int amount) {
+
+    public Card withdraw(String name, int amount) throws InvalidWithdrawException {
         Card card = cardRepository.findCardByName(name);
-        card.setSold(card.getSold()-amount );
-        cardRepository.save(card);
-        return card;
+        if(card.getSold()>amount) {
+            card.setSold(card.getSold() - amount);
+            cardRepository.save(card);
+            return card;
+        }
+        else {
+             throw new InvalidWithdrawException("Fonduri insuficiente");
+
+        }
 
     }
 

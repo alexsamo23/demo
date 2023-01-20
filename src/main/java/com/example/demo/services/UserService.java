@@ -19,6 +19,20 @@ public class UserService {
 //optional
     //stream
 
+    public User updateEmail(String name, String email) {
+        User user = userRepository.findUserByFirstName(name);
+        user.setEmail(email);
+        userRepository.save(user);
+        return user;
+
+    }
+
+    public User updatePhone(String name, String phone){
+        User user = userRepository.findUserByFirstName(name);
+        user.setPhoneNumber(phone);
+        userRepository.save(user);
+        return user;
+    }
     public List<User> getAllUsers(){
         return userRepository.findAll();
     }

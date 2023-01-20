@@ -58,6 +58,19 @@ public class CardService {
         }
 
     }
+    public Card changeLimit(String name, int limit) {
+        Card card = cardRepository.findCardByName(name);
+        card.setDailyLimit(limit);
+        cardRepository.save(card);
+        return card;
 
+    }
+    public Card changeStatus(String name, boolean status) {
+        Card card = cardRepository.findCardByName(name);
+        card.setStatus(status);
+        cardRepository.save(card);
+        return card;
+
+    }
 
     }

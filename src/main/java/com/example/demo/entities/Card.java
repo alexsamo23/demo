@@ -23,6 +23,10 @@ public class Card {
     private String IBAN;
     @Column(name="pin",nullable = false)
     private String PIN;
+    @Column(name="dailylimit",nullable = false)
+    private int dailyLimit;
 
+    @Column(name="status",nullable = false)
+    private boolean status;
 
 }

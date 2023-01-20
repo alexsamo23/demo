@@ -1,12 +1,10 @@
 package com.example.demo.controllers;
 
 import com.example.demo.entities.Card;
-import com.example.demo.entities.User;
 import com.example.demo.exceptions.ErrorResponse;
 import com.example.demo.exceptions.InvalidWithdrawException;
 import com.example.demo.exceptions.ResourceNotFoundException;
 import com.example.demo.services.CardService;
-import com.example.demo.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,6 +33,15 @@ public class CardController {
         return new ResponseEntity<Card>(cardService.withdraw(name, amount), HttpStatus.OK);
     }
 
+
+    @PutMapping("/{name}/limit/{limit}")
+    public ResponseEntity <Card> changeLimit(@PathVariable("name") String name,@PathVariable("limit") int limit)  {
+        return new ResponseEntity<Card>(cardService.changeLimit(name,limit), HttpStatus.OK);
+    }
+    @PutMapping("/{name}/status/{status}")
+    public ResponseEntity <Card> changeStatus(@PathVariable("name") String name,@PathVariable("status") boolean status)  {
+        return new ResponseEntity<Card>(cardService.changeStatus(name,status), HttpStatus.OK);
+    }
     @GetMapping("/")
     public List<Card>getAllCreditCards(){
         return cardService.getAllCreditCards();
@@ -43,10 +50,19 @@ public class CardController {
    @ExceptionHandler(value = InvalidWithdrawException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public ErrorResponse
-    handleCustomerAlreadyExistsException(
+    handleInvalidWithdrawException(
             InvalidWithdrawException ex)
     {
         return new ErrorResponse(HttpStatus.CONFLICT.value(),
+                ex.getMessage());
+    }
+    @ExceptionHandler(value = ResourceNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse
+    handleResourceNotFoundException(
+           ResourceNotFoundException ex)
+    {
+        return new ErrorResponse(HttpStatus.NOT_FOUND.value(),
                 ex.getMessage());
     }
 

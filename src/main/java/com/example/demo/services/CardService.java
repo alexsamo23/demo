@@ -41,6 +41,7 @@ public class CardService {
         Card card = cardRepository.findCardByName(name);
         card.setSold(card.getSold()+amount );
         cardRepository.save(card);
+
         return card;
 
     }
@@ -50,6 +51,7 @@ public class CardService {
         if(card.getSold()>amount) {
             card.setSold(card.getSold() - amount);
             cardRepository.save(card);
+
             return card;
         }
         else {
@@ -62,6 +64,7 @@ public class CardService {
         Card card = cardRepository.findCardByName(name);
         card.setDailyLimit(limit);
         cardRepository.save(card);
+
         return card;
 
     }
@@ -69,6 +72,7 @@ public class CardService {
         Card card = cardRepository.findCardByName(name);
         card.setStatus(status);
         cardRepository.save(card);
+
         return card;
 
     }

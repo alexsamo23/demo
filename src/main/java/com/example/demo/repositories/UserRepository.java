@@ -12,7 +12,7 @@ public interface UserRepository extends JpaRepository<User,Long> {
 
     public User findUserByFirstName(String firstName);
     public User findUserByEmail(String email);
-
+   //Optional<User> findUserByEmail(String email);
 
 
     //   public void deleteUserByEmail(String email);

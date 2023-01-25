@@ -25,6 +25,7 @@ public class UserService {
         User user = userRepository.findUserByFirstName(name);
         user.setEmail(email);
         userRepository.save(user);
+
         return user;
 
     }
@@ -33,12 +34,14 @@ public class UserService {
         User user = userRepository.findUserByFirstName(name);
         user.setPhoneNumber(phone);
         userRepository.save(user);
+
         return user;
     }
     public String deleteUser(String email) {
         Optional<User> user = Optional.ofNullable(userRepository.findUserByEmail(email));
         if (user.isPresent()) {
             userRepository.delete(user.get());
+
             return "User deleted";
         } else {
             throw new ResourceNotFoundException("User", "email", email);

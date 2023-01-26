@@ -29,4 +29,5 @@ public class Card {
     @Column(name="status",nullable = false)
     private boolean status;
 
+
 }

@@ -16,8 +16,8 @@ public class User {
     private String firstName;
     @Column(name="email",nullable = false)
     private String email;
-    @Column(name="pin",nullable = false)
-    private String PIN;
+    @Column(name="password",nullable = false)
+    private String password;
     @Column(name="phonenumber",nullable = false)
     private String phoneNumber;
 

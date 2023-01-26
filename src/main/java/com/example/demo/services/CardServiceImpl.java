@@ -1,24 +1,27 @@
 package com.example.demo.services;
-import java.util.*;
 import com.example.demo.entities.Card;
+import com.example.demo.entities.User;
 import com.example.demo.exceptions.InvalidWithdrawException;
 import com.example.demo.exceptions.ResourceNotFoundException;
 import com.example.demo.repositories.CardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class CardService {
+public class CardServiceImpl implements ICardService {
+
     @Autowired
     private CardRepository cardRepository;
+
+    @Override
     public List<Card> getAllCreditCards(){
         return cardRepository.findAll();
     }
 
+    @Override
     public Card getCardByName(String name) {
         Optional<Card> card = Optional.ofNullable(cardRepository.findCardByName(name));
         if (card.isPresent()) {
@@ -28,6 +31,7 @@ public class CardService {
         }
     }
 
+    @Override
     public int checkBalance(String name) throws ResourceNotFoundException {
         Optional<Card> card = Optional.ofNullable(cardRepository.findCardByName(name));
         if (card.isPresent()) {
@@ -37,6 +41,7 @@ public class CardService {
         }
     }
 
+    @Override
     public Card deposit(String name, int amount) {
         Card card = cardRepository.findCardByName(name);
         card.setSold(card.getSold()+amount );
@@ -46,6 +51,7 @@ public class CardService {
 
     }
 
+    @Override
     public Card withdraw(String name, int amount) throws InvalidWithdrawException {
         Card card = cardRepository.findCardByName(name);
         if(card.getSold()>amount) {
@@ -60,6 +66,8 @@ public class CardService {
         }
 
     }
+
+    @Override
     public Card changeLimit(String name, int limit) {
         Card card = cardRepository.findCardByName(name);
         card.setDailyLimit(limit);
@@ -68,6 +76,8 @@ public class CardService {
         return card;
 
     }
+
+    @Override
     public Card changeStatus(String name, boolean status) {
         Card card = cardRepository.findCardByName(name);
         card.setStatus(status);
@@ -77,4 +87,39 @@ public class CardService {
 
     }
 
+    @Override
+    public Card saveCard(Card card){
+        return cardRepository.save(card);
     }
+    @Override
+    public Card updateCard(Card card, String name){
+        Card existingCard =cardRepository.findCardByName(name);
+        existingCard.setId(card.getId());
+        existingCard.setName(card.getName());
+        existingCard.setNumber(card.getNumber());
+        existingCard.setCvv(card.getCvv());
+        existingCard.setExpireDate(card.getExpireDate());
+        existingCard.setSold(card.getSold());
+        existingCard.setIBAN(card.getIBAN());
+        existingCard.setPIN(card.getPIN());
+        existingCard.setDailyLimit(card.getDailyLimit());
+        existingCard.setStatus(card.isStatus());
+        cardRepository.save(existingCard);
+
+        return existingCard;
+
+    }
+
+    @Override
+    public String deleteCard(String name) {
+        Optional<Card> card = Optional.ofNullable(cardRepository.findCardByName(name));
+        if(card.isPresent()){
+            cardRepository.delete(card.get());
+            return "Card deleted";
+        }
+        else {
+            throw new ResourceNotFoundException("Card", "name", name);
+        }
+    }
+
+}

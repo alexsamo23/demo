@@ -3,6 +3,7 @@ package com.example.demo.security_config;
 import jakarta.persistence.Column;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.User;
@@ -22,15 +23,18 @@ public class SecurityConfig {
         return NoOpPasswordEncoder.getInstance();
     }
 
- /*
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.httpBasic()
                 .and()
                 .authorizeHttpRequests()
-                .requestMatchers("/cards/**").authenticated()
-                .anyRequest().permitAll()
-                .and().build();
+                //.requestMatchers().authenticated()
+
+                .anyRequest().authenticated()
+               //.anyRequest().permitAll()
+                .and().csrf().disable()
+                .build();
     }
-*/
+
 }

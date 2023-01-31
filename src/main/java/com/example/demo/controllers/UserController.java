@@ -8,6 +8,7 @@ import com.example.demo.services.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,28 +19,31 @@ public class UserController {
     @Autowired
     private IUserService userService;
 
-
-    @PostMapping()
+    @PostMapping("/admin/save")
+    @PreAuthorize("hasAuthority('write')")
     public ResponseEntity<User> saveUser(@RequestBody User user){
 
         return new ResponseEntity<User>(userService.saveUser(user),HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/{email}")
+    @DeleteMapping("/admin/delete/{email}")
+    @PreAuthorize("hasAuthority('write')")
     public ResponseEntity<String> deleteUser(@PathVariable("email") String email){
         userService.deleteUser((email));
 
         return new ResponseEntity<String>("User deleted succesfully", HttpStatus.OK);
     }
 
-    @PutMapping("/update/{email}")
+    @PutMapping("/admin/update/{email}")
+    @PreAuthorize("hasAuthority('write')")
     public ResponseEntity<User>updateUser(@RequestBody User user,@PathVariable("email") String email){
 
         return new ResponseEntity<User>(userService.updateUser(user,email),HttpStatus.OK);
     }
 
 
-    @GetMapping("/all")
+    @GetMapping("/admin/all")
+    @PreAuthorize("hasAuthority('write')")
     public List<User> getAllUsers(){
 
         return userService.getAllUsers();

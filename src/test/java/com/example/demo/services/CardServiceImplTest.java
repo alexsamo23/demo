@@ -27,14 +27,14 @@ class CardServiceImplTest {
     private CardServiceImpl cardService;
 
     @Test
-    void AllCreditCardsShouldBereturned() {
+    void AllCreditCardsShouldBeReturned() {
         //given
-
         Card card1 = new Card();
         Card card2 = new Card();
         List<Card> input = new ArrayList<Card>();
         input.add(card1);
         input.add(card2);
+
         //when
        Mockito.when(cardRepository.findAll()).thenReturn(input);
 

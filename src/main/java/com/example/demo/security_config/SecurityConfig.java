@@ -33,14 +33,22 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http.httpBasic()
+         http /*.httpBasic()
                 .and()
                 .authorizeRequests()
-               // .requestMatchers("/card/adminop/all").hasAuthority("write")
                 .anyRequest().authenticated()
-               //.anyRequest().permitAll()
-                .and().csrf().disable()
-                .build();
+                .and()*/
+
+                .formLogin(form -> form
+                        .loginPage("/login.html")
+                        .permitAll()
+                );
+
+                http.logout().permitAll();
+                http.authorizeHttpRequests().anyRequest().authenticated()
+                .and().csrf().disable();
+                return http.build();
+
     }
 
 

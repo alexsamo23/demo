@@ -12,6 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -46,11 +47,12 @@ public class UserController {
     }
 
 
+
     @GetMapping("/admin/all")
     @PreAuthorize("hasAuthority('write')")
-    public List<User> getAllUsers(){
-
-        return userService.getAllUsers();
+    public String getAllUsers(Model model){
+        model.addAttribute("users", userService.getAllUsers());
+        return "viewUsers";
     }
 
     @PutMapping("/{name}/email/{email}")

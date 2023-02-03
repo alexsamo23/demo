@@ -38,6 +38,12 @@ public class UserServiceImpl implements IUserService {
     public List<User> getAllUsers(){
         return userRepository.findAll();
     }
+    public User getUserWithEmail(String email){
+        return userRepository.findUserByEmail(email);
+    }
+    public User getUserById(Long id){
+        return userRepository.findUserById(id);
+    }
 
     public User saveUser(User user){
         return userRepository.save(user);
@@ -54,17 +60,24 @@ public class UserServiceImpl implements IUserService {
         }
     }
 
-    public User updateUser(User user, String email){
-        User existingUser =userRepository.findUserByEmail(email);
-        existingUser.setId(user.getId());
+    public User updateUser(User user, Long id){
+        User existingUser =userRepository.findUserById(id);
+        existingUser.setId(id);
         existingUser.setFirstName(user.getFirstName());
         existingUser.setLastName(user.getLastName());
         existingUser.setPhoneNumber(user.getPhoneNumber());
         existingUser.setEmail(user.getEmail());
-        existingUser.setPassword(user.getPassword());
+        //existingUser.setPassword(user.getPassword());
         userRepository.save(existingUser);
 
-        return existingUser;
+       return existingUser;
+    }
+
+    public User updateUser1(User user){
+
+      return  userRepository.save(user);
+
+
     }
 
 

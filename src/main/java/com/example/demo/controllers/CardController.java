@@ -57,7 +57,7 @@ public class CardController {
         return new ResponseEntity<Card>(cardService.saveCard(card),HttpStatus.CREATED);
     }
 
-    @PutMapping("/admin/update/{name}")
+    @PutMapping("/admin/updateCard/{name}")
     @PreAuthorize("hasAuthority('write')")
     public ResponseEntity<Card> updateCard (@RequestBody Card card, @PathVariable("name") String name){
 

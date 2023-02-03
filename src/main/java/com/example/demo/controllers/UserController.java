@@ -12,13 +12,14 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
-@RequestMapping("/user")
+@Controller
+//@RequestMapping("/user")
 public class UserController {
     @Autowired
     private IUserService userService;
@@ -31,19 +32,48 @@ public class UserController {
         return new ResponseEntity<User>(userService.saveUser(user),HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/admin/delete/{email}")
+    @GetMapping("/admin/delete/{email}")
     @PreAuthorize("hasAuthority('write')")
-    public ResponseEntity<String> deleteUser(@PathVariable("email") String email){
+    public String deleteUser(@PathVariable("email") String email){
         userService.deleteUser((email));
 
-        return new ResponseEntity<String>("User deleted succesfully", HttpStatus.OK);
+       // return new ResponseEntity<String>("User deleted succesfully", HttpStatus.OK);
+
+
+            return "register_success";
     }
 
-    @PutMapping("/admin/update/{email}")
-    @PreAuthorize("hasAuthority('write')")
-    public ResponseEntity<User>updateUser(@RequestBody User user,@PathVariable("email") String email){
+    @GetMapping("/editUser/{id}")
+    public String editForm (@PathVariable("id") Long id, Model model) {
+        model.addAttribute("user",userService.getUserById(id));
 
-        return new ResponseEntity<User>(userService.updateUser(user,email),HttpStatus.OK);
+        return "edit_user";
+    }
+
+    @PostMapping("/admin/update/{id}")
+    @PreAuthorize("hasAuthority('write')")
+   // public ResponseEntity<User>updateUser(@RequestBody User user,@PathVariable("email") String email){
+       // return new ResponseEntity<User>(userService.updateUser(user,email),HttpStatus.OK);
+    //public String updateUser(@ModelAttribute("user") User user,Model model,@PathVariable("email") String email){
+       // userService.updateUser(user,email);
+       // return "register_success";
+
+    public String updateUser(@PathVariable Long id,
+                                @ModelAttribute("user") User user,
+                                Model model) {
+
+        // get student from database by id
+      /*  User existingUser = userService.getUserById(id);
+        existingUser.setId(id);
+        existingUser.setFirstName(user.getFirstName());
+        existingUser.setLastName(user.getLastName());
+        existingUser.setEmail(user.getEmail());
+        //existingUser.setEmail(user.getPhoneNumber());
+*/
+        // save updated student object
+      //  userService.updateUser1(existingUser);
+        userService.updateUser(user, id);
+        return "register_success";
     }
 
 

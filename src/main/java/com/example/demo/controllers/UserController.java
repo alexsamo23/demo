@@ -3,6 +3,7 @@ package com.example.demo.controllers;
 import com.example.demo.entities.User;
 import com.example.demo.exceptions.ErrorResponse;
 import com.example.demo.exceptions.ResourceNotFoundException;
+import com.example.demo.security.SecurityUser;
 import com.example.demo.services.IUserService;
 import com.example.demo.services.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @Controller
@@ -58,25 +60,27 @@ public class UserController {
        // userService.updateUser(user,email);
        // return "register_success";
 
-    public String updateUser(@PathVariable Long id,
-                                @ModelAttribute("user") User user,
-                                Model model) {
+    public String updateUser(@PathVariable ("id") Long id,@ModelAttribute("user") User user, Model model) {
 
-        // get student from database by id
-      /*  User existingUser = userService.getUserById(id);
-        existingUser.setId(id);
-        existingUser.setFirstName(user.getFirstName());
-        existingUser.setLastName(user.getLastName());
-        existingUser.setEmail(user.getEmail());
-        //existingUser.setEmail(user.getPhoneNumber());
-*/
-        // save updated student object
-      //  userService.updateUser1(existingUser);
         userService.updateUser(user, id);
         return "register_success";
     }
 
+    @GetMapping("/viewOwnDetails")
+    public String editOwnForm (Principal principal, Model model) {
+        SecurityUser userCustom = (SecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        long userId= userCustom.getUser().getId();
+        model.addAttribute("user",userService.getUserById(userId));
 
+        return "view_user_details";
+    }
+
+    @GetMapping("/editEmail/{id}")
+    public String editEmail (@PathVariable("id") Long id, Model model) {
+        model.addAttribute("user",userService.getUserById(id));
+
+        return "edit_own_details";
+    }
 
     @GetMapping("/admin/all")
     @PreAuthorize("hasAuthority('write')")
@@ -85,16 +89,14 @@ public class UserController {
         return "viewUsers";
     }
 
-    @PutMapping("/{name}/email/{email}")
-    public ResponseEntity<User> updateEmail(@PathVariable("name") String name, @PathVariable("email") String email){
 
-        return new ResponseEntity<User>(userService.updateEmail(name,email), HttpStatus.OK);
-    }
+    @PostMapping("/phoneAndEmail/{name}")
+    public String updatePhone(@PathVariable("name") String name,@ModelAttribute("user") User user , Model model){
 
-    @PutMapping("/{name}/phone/{phone}")
-    public ResponseEntity<User> updatePhone(@PathVariable("name") String name, @PathVariable("phone") String phone){
-
-        return new ResponseEntity<User>(userService.updatePhone(name,phone),HttpStatus.OK);
+        //return new ResponseEntity<User>(userService.updatePhone(name,phone),HttpStatus.OK);
+        userService.updateEmail(name,user.getEmail());
+        userService.updatePhone(name,user.getPhoneNumber());
+        return  "register_success";
     }
 
     @ExceptionHandler(value = ResourceNotFoundException.class)

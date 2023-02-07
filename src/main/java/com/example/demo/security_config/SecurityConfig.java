@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
@@ -27,17 +28,19 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder(){
-        return NoOpPasswordEncoder.getInstance();
+        return new BCryptPasswordEncoder();
     }
 
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-         http /*.httpBasic()
-                .and()
-                .authorizeRequests()
-                .anyRequest().authenticated()
-                .and()*/
+         http //.httpBasic()
+                //.and()
+                .authorizeHttpRequests()
+                 .requestMatchers("/register").permitAll()
+                 .requestMatchers("/process_register").permitAll()
+              //  .anyRequest().authenticated()
+        .and()
 
                 .formLogin(form -> form
                         .loginPage("/login.html")

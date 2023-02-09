@@ -65,7 +65,7 @@ class CardServiceImplTest {
 
         Mockito.when(cardRepository.findCardByName("card")).thenReturn(card1);
 
-        int sold = cardService.checkBalance(card1.getName());
+        int sold = cardService.checkBalance(card1.getId());
         assertEquals(300,sold);
     }
 
@@ -77,7 +77,7 @@ class CardServiceImplTest {
 
         Mockito.when(cardRepository.findCardByName("card")).thenReturn(card1);
 
-        Card card = cardService.deposit(card1.getName(),500);
+        Card card = cardService.deposit(card1.getId(),500);
 
         assertEquals(800,card.getSold());
 
@@ -91,7 +91,7 @@ class CardServiceImplTest {
 
         Mockito.when(cardRepository.findCardByName("card")).thenReturn(card1);
 
-        Card card = cardService.withdraw(card1.getName(),200);
+        Card card = cardService.withdraw(card1.getId(),200);
 
         assertEquals(300,card.getSold());
     }

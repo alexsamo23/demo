@@ -4,40 +4,53 @@ import com.example.demo.entities.Card;
 import com.example.demo.exceptions.ErrorResponse;
 import com.example.demo.exceptions.InvalidWithdrawException;
 import com.example.demo.exceptions.ResourceNotFoundException;
-
 import com.example.demo.services.ICardService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
-@RestController
-@RequestMapping("/card")
+@Controller
+//@RequestMapping("/card")
 public class CardController {
     @Autowired
     private ICardService cardService;
 
-    @GetMapping("/userOp/{name}")
-    public ResponseEntity<Integer> checkBalance(@PathVariable("name") String name) throws ResourceNotFoundException {
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
-     return new ResponseEntity<Integer>(cardService.checkBalance(name), HttpStatus.OK);
+    @PostMapping("/userCheck")
+    public String checkBalance(@RequestParam("id") Long id, Model model) throws ResourceNotFoundException {
+
+        model.addAttribute("sold",cardService.checkBalance(id));
+
+        return "register_success";
+
     }
 
-    @PutMapping("/userOp/{name}/deposit/{amount}")
-    public ResponseEntity <Card> deposit(@PathVariable("name") String name,@PathVariable("amount") int amount) {
+    @PostMapping("/deposit")
+    public String deposit(@RequestParam("id") Long id, @RequestParam("amount") int amount ){
 
-      return new ResponseEntity<Card>(cardService.deposit(name,amount), HttpStatus.OK);
+        cardService.deposit(id,amount);
+        logger.info("Deposit successfully");
+
+        return "register_success";
     }
 
-    @PutMapping("/userOp/{name}/withdraw/{amount}")
-    public ResponseEntity <Card> withdraw(@PathVariable("name") String name,@PathVariable("amount") int amount) throws InvalidWithdrawException {
+    @PostMapping("/withdraw")
+    public String withdraw (@RequestParam("id") Long id, @RequestParam("amount") int amount ) throws InvalidWithdrawException {
 
-        return new ResponseEntity<Card>(cardService.withdraw(name, amount), HttpStatus.OK);
+        cardService.withdraw(id,amount);
+        logger.info("Withdraw successfully");
+
+        return "register_success";
     }
+
 
 
     @PutMapping("/userOp/{name}/limit/{limit}")
@@ -51,7 +64,7 @@ public class CardController {
         return new ResponseEntity<Card>(cardService.changeStatus(name,status), HttpStatus.OK);
     }
 
-    @PostMapping("/admin/save")
+    @PostMapping("/adminCard/save")
     @PreAuthorize("hasAuthority('write')")
     public ResponseEntity<Card> saveCard (@RequestBody Card card){
         return new ResponseEntity<Card>(cardService.saveCard(card),HttpStatus.CREATED);
@@ -72,13 +85,18 @@ public class CardController {
         return new ResponseEntity<String>("Card deleted succesfully", HttpStatus.OK);
     }
 
-    @GetMapping("/admin/all")
+    @GetMapping("/adminViewCards/all")
     @PreAuthorize("hasAuthority('write')")
-    public List<Card>getAllCreditCards(){
-        var u = SecurityContextHolder.getContext().getAuthentication();
+    public String getAllCreditCards(Model model){
+        model.addAttribute("cards", cardService.getAllCreditCards());
+        return "viewAllCards";
+    }
 
-        return cardService.getAllCreditCards();
-   }
+    @GetMapping("/userViewOwnCards/all/{id}")
+    public String getOwnCreditCards(@PathVariable("id") Long id, Model model){
+        model.addAttribute("cards", cardService.getAllCreditCardsWithId(id));
+        return "view_own_cards";
+    }
 
    @ExceptionHandler(value = InvalidWithdrawException.class)
     @ResponseStatus(HttpStatus.CONFLICT)

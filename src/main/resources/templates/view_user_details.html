@@ -35,12 +35,12 @@
       <td th:text = "${user.email}"></td>
       <td th:text = "${user.phoneNumber}"></td>
        <td>
-        <a th:href = "@{/editEmail/{id} (id=${user.id})}"
-             class = "btn btn-primary">Update email</a>
+        <a th:href = "@{/editDetails/{id} (id=${user.id})}"
+             class = "btn btn-primary">Update Details</a>
 
 
-          <a th:href = "@{/admin/delete/{email}(email=${user.email})}"
-             class = "btn btn-danger">Update email</a>
+          <a th:href = "@{/userViewOwnCards/all/{id} (id=${user.id})}"
+             class = "btn btn-danger">Show cards</a>
 
         </td>
       </tbody>

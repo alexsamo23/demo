@@ -5,69 +5,68 @@ import com.example.demo.exceptions.ErrorResponse;
 import com.example.demo.exceptions.ResourceNotFoundException;
 import com.example.demo.security.SecurityUser;
 import com.example.demo.services.IUserService;
-import com.example.demo.services.UserServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.List;
+
 
 @Controller
-//@RequestMapping("/user")
 public class UserController {
-    @Autowired
-    private IUserService userService;
 
+    private final IUserService userService;
+
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+
+    public UserController(IUserService userService) {
+        this.userService = userService;
+    }
 
     @PostMapping("/admin/save")
     @PreAuthorize("hasAuthority('write')")
     public ResponseEntity<User> saveUser(@RequestBody User user){
-
-        return new ResponseEntity<User>(userService.saveUser(user),HttpStatus.CREATED);
+        
+        return new ResponseEntity<>(userService.saveUser(user),HttpStatus.CREATED);
     }
 
     @GetMapping("/admin/delete/{email}")
     @PreAuthorize("hasAuthority('write')")
     public String deleteUser(@PathVariable("email") String email){
+
         userService.deleteUser((email));
-
-       // return new ResponseEntity<String>("User deleted succesfully", HttpStatus.OK);
-
+        logger.info("User with email "+ email +" deleted successfully");
 
             return "register_success";
     }
 
     @GetMapping("/editUser/{id}")
     public String editForm (@PathVariable("id") Long id, Model model) {
-        model.addAttribute("user",userService.getUserById(id));
+
+        model.addAttribute("user", userService.getUserById(id));
 
         return "edit_user";
     }
 
     @PostMapping("/admin/update/{id}")
     @PreAuthorize("hasAuthority('write')")
-   // public ResponseEntity<User>updateUser(@RequestBody User user,@PathVariable("email") String email){
-       // return new ResponseEntity<User>(userService.updateUser(user,email),HttpStatus.OK);
-    //public String updateUser(@ModelAttribute("user") User user,Model model,@PathVariable("email") String email){
-       // userService.updateUser(user,email);
-       // return "register_success";
-
     public String updateUser(@PathVariable ("id") Long id,@ModelAttribute("user") User user, Model model) {
 
         userService.updateUser(user, id);
+        logger.info("User updated successfully");
+
         return "register_success";
     }
 
     @GetMapping("/viewOwnDetails")
     public String editOwnForm (Principal principal, Model model) {
+
         SecurityUser userCustom = (SecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         long userId= userCustom.getUser().getId();
         model.addAttribute("user",userService.getUserById(userId));
@@ -75,8 +74,9 @@ public class UserController {
         return "view_user_details";
     }
 
-    @GetMapping("/editEmail/{id}")
+    @GetMapping("/editDetails/{id}")
     public String editEmail (@PathVariable("id") Long id, Model model) {
+
         model.addAttribute("user",userService.getUserById(id));
 
         return "edit_own_details";
@@ -85,7 +85,9 @@ public class UserController {
     @GetMapping("/admin/all")
     @PreAuthorize("hasAuthority('write')")
     public String getAllUsers(Model model){
+
         model.addAttribute("users", userService.getAllUsers());
+
         return "viewUsers";
     }
 
@@ -93,9 +95,10 @@ public class UserController {
     @PostMapping("/phoneAndEmail/{name}")
     public String updatePhone(@PathVariable("name") String name,@ModelAttribute("user") User user , Model model){
 
-        //return new ResponseEntity<User>(userService.updatePhone(name,phone),HttpStatus.OK);
         userService.updateEmail(name,user.getEmail());
         userService.updatePhone(name,user.getPhoneNumber());
+        logger.info("User updated successfully");
+
         return  "register_success";
     }
 

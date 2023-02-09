@@ -37,4 +37,8 @@ public class User {
     )
     private Set<Authority> authorities;
 
+    @OneToMany(mappedBy="user", cascade = CascadeType.ALL)
+    private Set<Card> cards;
+
+
 }

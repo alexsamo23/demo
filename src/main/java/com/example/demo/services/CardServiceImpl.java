@@ -21,6 +21,14 @@ public class CardServiceImpl implements ICardService {
         return cardRepository.findAll();
     }
 
+    public Card getCardById(Long id){
+        return cardRepository.findCardById(id);
+    }
+    @Override
+    public List<Card> getAllCreditCardsWithId(Long id){
+        return cardRepository.findCardByUserId(id);
+    }
+
     @Override
     public Card getCardByName(String name) {
         Optional<Card> card = Optional.ofNullable(cardRepository.findCardByName(name));
@@ -32,18 +40,18 @@ public class CardServiceImpl implements ICardService {
     }
 
     @Override
-    public int checkBalance(String name) throws ResourceNotFoundException {
-        Optional<Card> card = Optional.ofNullable(cardRepository.findCardByName(name));
+    public int checkBalance(Long id) throws ResourceNotFoundException {
+        Optional<Card> card = Optional.ofNullable(cardRepository.findCardById(id));
         if (card.isPresent()) {
              return card.get().getSold();
         } else {
-            throw new ResourceNotFoundException("Card", "name", name);
+            throw new ResourceNotFoundException("Card", "id", id);
         }
     }
 
     @Override
-    public Card deposit(String name, int amount) {
-        Card card = cardRepository.findCardByName(name);
+    public Card deposit(Long id, int amount) {
+        Card card = cardRepository.findCardById(id);
         card.setSold(card.getSold()+amount );
         cardRepository.save(card);
 
@@ -52,8 +60,8 @@ public class CardServiceImpl implements ICardService {
     }
 
     @Override
-    public Card withdraw(String name, int amount) throws InvalidWithdrawException {
-        Card card = cardRepository.findCardByName(name);
+    public Card withdraw(Long id, int amount) throws InvalidWithdrawException {
+        Card card = cardRepository.findCardById(id);
         if(card.getSold()>amount) {
             card.setSold(card.getSold() - amount);
             cardRepository.save(card);

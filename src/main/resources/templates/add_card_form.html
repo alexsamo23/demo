@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.thymeleaf.org ">
+<head>
+  <meta charset="ISO-8859-1">
+  <title>Sign Up - CodeJava</title>
+  <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css"/>
+  <script type="text/javascript" src="/webjars/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="container text-center">
+  <div>
+    <h1>Add new card </h1>
+  </div>
+  <form th:action="@{/processAddNewCard}" th:object="${card}"
+        method="post" style="max-width: 600px; margin: 0 auto;">
+    <div class="m-3">
+
+      <div class="form-group row">
+        <label class="col-4 col-form-label">Name: </label>
+        <div class="col-8">
+          <input type="text" th:field="*{name}" th:errorClass="is-invalid" class="form-control" required/>
+          <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="invalid-feedback"></div>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label class="col-4 col-form-label">Number: </label>
+        <div class="col-8">
+          <input type="text" th:field="*{number}" class="form-control" required/>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label class="col-4 col-form-label">CVV: </label>
+        <div class="col-8">
+          <input type="text" th:field="*{cvv}" class="form-control"
+                 required minlength="2" maxlength="20"/>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label class="col-4 col-form-label">Expire date: </label>
+        <div class="col-8">
+          <input type="text" th:field="*{expireDate}" class="form-control"
+                 required minlength="2" maxlength="20"/>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label class="col-4 col-form-label">IBAN: </label>
+        <div class="col-8">
+          <input type="text" th:field="*{IBAN}" class="form-control"
+                 required minlength="2" maxlength="20"/>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label class="col-4 col-form-label">Daily limit: </label>
+        <div class="col-8">
+          <input type="text" th:field="*{dailyLimit}" class="form-control"
+                 required/>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label class="col-4 col-form-label">Status: </label>
+        <div class="col-8">
+          <input type="text" th:field="*{status}" class="form-control"
+          />
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label class="col-4 col-form-label">User id: </label>
+        <div class="col-8">
+          <input type="text" th:field="*{user.id}" class="form-control"
+          />
+        </div>
+      </div>
+
+      <div>
+        <button type="submit" class="btn btn-primary">Add card</button>
+      </div>
+    </div>
+  </form>
+</div>
+</body>
+</html>

@@ -158,6 +158,83 @@
        </div>
 
 
+       <button type="button" class="btn btn-success btn-sm mt-2"
+               data-toggle="modal"
+               th:attr="data-target='#exampleModalCenter2'+*{card.id}">Change daily limit
+       </button> <!-- Modal -->
+
+       <div class="modal fade"
+            th:id="*{'exampleModalCenter2'+{card.id}}" tabindex="-1"
+            role="dialog" aria-labelledby="exampleModalCenterTitle2"
+            aria-hidden="true">
+         <div class="modal-dialog modal-dialog-centered" role="document">
+           <div class="modal-content">
+             <div class="modal-header">
+               <h5 class="modal-title" id="exampleModalCenterTitle2">Limit</h5>
+               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                 <span aria-hidden="true">&times;</span>
+               </button>
+             </div>
+
+             <div class="modal-body">
+               <form action="/userOp/limit" method="post">
+                 <div class="form-group">
+                   <input type="hidden" th:value="*{card.id}" class="form-control" name="id">
+                   <label>Change daily limit</label> <input type="text"
+                                                          name="limit" class="form-control"> <br>
+                   <button type="submit" class="btn btn-primary">submit</button>
+                 </div>
+               </form>
+
+             </div>
+             <div class="modal-footer">
+               <button type="button" class="btn btn-secondary"
+                       data-dismiss="modal">Close</button>
+
+             </div>
+           </div>
+         </div>
+       </div>
+
+       <button type="button" class="btn btn-success btn-sm mt-2"
+               data-toggle="modal"
+               th:attr="data-target='#exampleModalCenter3'+*{card.id}">Change status
+       </button> <!-- Modal -->
+
+       <div class="modal fade"
+            th:id="*{'exampleModalCenter3'+{card.id}}" tabindex="-1"
+            role="dialog" aria-labelledby="exampleModalCenterTitle3"
+            aria-hidden="true">
+         <div class="modal-dialog modal-dialog-centered" role="document">
+           <div class="modal-content">
+             <div class="modal-header">
+               <h5 class="modal-title" id="exampleModalCenterTitle3">Status</h5>
+               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                 <span aria-hidden="true">&times;</span>
+               </button>
+             </div>
+
+             <div class="modal-body">
+               <form action="/userOp/status" method="post">
+                 <div class="form-group">
+                   <input type="hidden" th:value="*{card.id}" class="form-control" name="id">
+                   <label>Change status</label> <input type="text"
+                                                          name="status" class="form-control"> <br>
+                   <button type="submit" class="btn btn-primary">submit</button>
+                 </div>
+               </form>
+
+             </div>
+             <div class="modal-footer">
+               <button type="button" class="btn btn-secondary"
+                       data-dismiss="modal">Close</button>
+
+             </div>
+           </div>
+         </div>
+       </div>
+
+
      </td>
 
 

@@ -104,7 +104,7 @@ class CardServiceImplTest {
 
         Mockito.when(cardRepository.findCardByName("card")).thenReturn(card1);
 
-        Card card = cardService.changeLimit(card1.getName(),200);
+        Card card = cardService.changeLimit(card1.getId(),200);
 
         assertEquals(200,card.getDailyLimit());
     }
@@ -117,7 +117,7 @@ class CardServiceImplTest {
 
         Mockito.when(cardRepository.findCardByName("card")).thenReturn(card1);
 
-        Card card = cardService.changeStatus(card1.getName(),true);
+        Card card = cardService.changeStatus(card1.getId(),true);
 
         assertEquals(true,card.isStatus());
     }
@@ -151,7 +151,7 @@ class CardServiceImplTest {
 
         Mockito.when(cardRepository.findCardByName("card")).thenReturn(card1);
 
-        Card card = cardService.updateCard(card2,"card");
+        Card card = cardService.updateCard(card2,card2.getId());
 
         assertEquals("card2",card.getName());
 
@@ -161,10 +161,11 @@ class CardServiceImplTest {
     void VerifyCardIsDeleted() {
         Card card1 = new Card();
         card1.setName("card");
+        card1.setId(1);
 
         Mockito.when(cardRepository.findCardByName("card")).thenReturn(card1);
 
-        String card = cardService.deleteCard("card");
+        String card = cardService.deleteCard(card1.getId());
 
         assertEquals("Card deleted",card);
 

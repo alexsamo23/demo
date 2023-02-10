@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="ISO-8859-1">
+  <title>User Management System</title>
+  <link rel="stylesheet"
+        href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+        crossorigin="anonymous">
+</head>
+<body>
+<!--
+<nav class="navbar navbar-expand-md bg-dark navbar-dark">
+    !-- Brand --
+    <a class="navbar-brand" href="#">Student Management System</a>
+
+    !-- Toggler/collapsibe Button --
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    !-- Navbar links --
+    <div class="collapse navbar-collapse" id="collapsibleNavbar">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/students}">Student Management</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+-->
+<br>
+<br>
+<div class = "container">
+  <div class = "row">
+    <div class ="col-lg-6 col-md-6 col-sm-6 container justify-content-center card">
+      <h1 class = "text-center"> Update Card </h1>
+      <div class = "card-body">
+        <form th:action="@{/admin/updateCard/{id} (id=${card.id})}" th:object = "${card}" method="POST">
+          <div class ="form-group">
+            <label> Card Name </label>
+            <input
+                    type = "text"
+                    name = "Name"
+                    th:field = "*{name}"
+                    class = "form-control"
+                    placeholder="Enter Card Name"
+            />
+          </div>
+
+          <div class ="form-group">
+            <label> Card Number </label>
+            <input
+                    type = "text"
+                    name = "Number"
+                    th:field = "*{number}"
+                    class = "form-control"
+                    placeholder="Enter Card Number"
+            />
+          </div>
+
+          <div class ="form-group">
+            <label> Card cvv </label>
+            <input
+                    type = "text"
+                    name = "cvv"
+                    th:field = "*{cvv}"
+                    class = "form-control"
+                    placeholder="Enter Card Cvv"
+            />
+          </div>
+          <div class ="form-group">
+            <label> Card Expire Date </label>
+            <input
+                    type = "text"
+                    name = "Expire date"
+                    th:field = "*{expireDate}"
+                    class = "form-control"
+                    placeholder="Enter expire date"
+            />
+          </div>
+
+          <div class ="form-group">
+            <label> Card Sold </label>
+            <input
+                    type = "text"
+                    name = "Sold"
+                    th:field = "*{sold}"
+                    class = "form-control"
+                    placeholder="Enter Sold"
+            />
+          </div>
+
+          <div class ="form-group">
+            <label> Card Iban </label>
+            <input
+                    type = "text"
+                    name = "iban"
+                    th:field = "*{IBAN}"
+                    class = "form-control"
+                    placeholder="Enter IBAN"
+            />
+          </div>
+
+          <div class ="form-group">
+            <label> Card Pin </label>
+            <input
+                    type = "text"
+                    name = "PIN"
+                    th:field = "*{PIN}"
+                    class = "form-control"
+                    placeholder="Enter pin"
+            />
+          </div>
+
+          <div class ="form-group">
+            <label> Card Daily Limit </label>
+            <input
+                    type = "text"
+                    name = "dailyLimit"
+                    th:field = "*{dailyLimit}"
+                    class = "form-control"
+                    placeholder="Enter Daily Limit"
+            />
+          </div>
+          <div class ="form-group">
+            <label> Card Status </label>
+            <input
+                    type = "text"
+                    name = "status"
+                    th:field = "*{status}"
+                    class = "form-control"
+                    placeholder="Enter status"
+            />
+          </div>
+
+          <div class ="form-group">
+            <label> User id </label>
+            <input
+                    type = "text"
+                    name = "userId"
+                    th:field = "*{user.id}"
+                    class = "form-control"
+                    placeholder="Enter  user id"
+            />
+          </div>
+
+          <div class = "box-footer">
+            <button type="submit" class = "btn btn-primary">
+              Submit
+            </button>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

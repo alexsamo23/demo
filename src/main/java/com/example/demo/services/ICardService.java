@@ -14,9 +14,9 @@ public interface ICardService {
     int checkBalance(Long id);
     Card deposit(Long id, int amount);
     Card withdraw(Long id, int amount) throws InvalidWithdrawException;
-    Card changeLimit(String name, int limit);
-    Card changeStatus(String name, boolean status);
+    Card changeLimit(Long id, int limit);
+    Card changeStatus(Long id, boolean status);
     Card saveCard(Card card);
-    Card updateCard(Card card, String name);
-    String deleteCard(String name);
+    Card updateCard(Card card, Long id);
+    String deleteCard(Long id);
 }

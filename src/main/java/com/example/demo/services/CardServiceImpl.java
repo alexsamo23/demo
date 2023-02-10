@@ -75,9 +75,11 @@ public class CardServiceImpl implements ICardService {
 
     }
 
+
+
     @Override
-    public Card changeLimit(String name, int limit) {
-        Card card = cardRepository.findCardByName(name);
+    public Card changeLimit(Long id, int limit) {
+        Card card = cardRepository.findCardById(id);
         card.setDailyLimit(limit);
         cardRepository.save(card);
 
@@ -86,8 +88,8 @@ public class CardServiceImpl implements ICardService {
     }
 
     @Override
-    public Card changeStatus(String name, boolean status) {
-        Card card = cardRepository.findCardByName(name);
+    public Card changeStatus(Long id, boolean status) {
+        Card card = cardRepository.findCardById(id);
         card.setStatus(status);
         cardRepository.save(card);
 
@@ -100,9 +102,9 @@ public class CardServiceImpl implements ICardService {
         return cardRepository.save(card);
     }
     @Override
-    public Card updateCard(Card card, String name){
-        Card existingCard =cardRepository.findCardByName(name);
-        existingCard.setId(card.getId());
+    public Card updateCard(Card card, Long id){
+        Card existingCard =cardRepository.findCardById(id);
+        existingCard.setId(id);
         existingCard.setName(card.getName());
         existingCard.setNumber(card.getNumber());
         existingCard.setCvv(card.getCvv());
@@ -119,14 +121,14 @@ public class CardServiceImpl implements ICardService {
     }
 
     @Override
-    public String deleteCard(String name) {
-        Optional<Card> card = Optional.ofNullable(cardRepository.findCardByName(name));
+    public String deleteCard(Long id) {
+        Optional<Card> card = Optional.ofNullable(cardRepository.findCardById(id));
         if(card.isPresent()){
             cardRepository.delete(card.get());
             return "Card deleted";
         }
         else {
-            throw new ResourceNotFoundException("Card", "name", name);
+            throw new ResourceNotFoundException("Card", "id", id);
         }
     }
 

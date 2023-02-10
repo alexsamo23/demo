@@ -43,7 +43,7 @@ public class UserController {
         userService.deleteUser((email));
         logger.info("User with email "+ email +" deleted successfully");
 
-            return "register_success";
+        return "register_success";
     }
 
     @GetMapping("/editUser/{id}")

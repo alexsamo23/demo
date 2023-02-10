@@ -1,6 +1,7 @@
 package com.example.demo.controllers;
 
 import com.example.demo.entities.Card;
+import com.example.demo.entities.User;
 import com.example.demo.exceptions.ErrorResponse;
 import com.example.demo.exceptions.InvalidWithdrawException;
 import com.example.demo.exceptions.ResourceNotFoundException;
@@ -13,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -24,12 +26,46 @@ public class CardController {
 
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
+    @GetMapping("/addNewCard")
+    public String showAddCardForm(Card card,Model model) {
+        model.addAttribute("card", card);
+
+        return "add_card_form";
+    }
+
+    @PostMapping("/processAddNewCard")
+    public String processCard(Card card) {
+
+        cardService.saveCard(card);
+        return "register_success";
+    }
+
+    @GetMapping("/editCard/{id}")
+    public String editCardForm (@PathVariable("id") Long id, Model model) {
+
+        model.addAttribute("card", cardService.getCardById(id));
+
+        return "edit_card";
+    }
+
+    @PostMapping("/admin/updateCard/{id}")
+    @PreAuthorize("hasAuthority('write')")
+    public String updateCard(@PathVariable ("id") Long id,@ModelAttribute("card") Card card, Model model) {
+
+        cardService.updateCard(card, id);
+        logger.info("User updated successfully");
+
+        return "register_success";
+    }
+
     @PostMapping("/userCheck")
     public String checkBalance(@RequestParam("id") Long id, Model model) throws ResourceNotFoundException {
 
         model.addAttribute("sold",cardService.checkBalance(id));
+        Card card= cardService.getCardById(id);
+        Long idUser= card.getUser().getId();
 
-        return "register_success";
+        return "redirect:/userViewOwnCards/all/"+idUser;
 
     }
 
@@ -38,8 +74,11 @@ public class CardController {
 
         cardService.deposit(id,amount);
         logger.info("Deposit successfully");
+        Card card= cardService.getCardById(id);
+        Long idUser= card.getUser().getId();
 
-        return "register_success";
+
+        return "redirect:/userViewOwnCards/all/"+idUser;
     }
 
     @PostMapping("/withdraw")
@@ -47,21 +86,30 @@ public class CardController {
 
         cardService.withdraw(id,amount);
         logger.info("Withdraw successfully");
+        Card card= cardService.getCardById(id);
+        Long idUser= card.getUser().getId();
 
-        return "register_success";
+
+        return "redirect:/userViewOwnCards/all/"+idUser;
     }
 
+    @PostMapping("/userOp/limit")
+    public String changeLimit(@RequestParam("id") Long id,@RequestParam("limit") int limit)  {
+        cardService.changeLimit(id,limit);
 
+        Card card= cardService.getCardById(id);
+        Long idUser= card.getUser().getId();
 
-    @PutMapping("/userOp/{name}/limit/{limit}")
-    public ResponseEntity <Card> changeLimit(@PathVariable("name") String name,@PathVariable("limit") int limit)  {
-
-        return new ResponseEntity<Card>(cardService.changeLimit(name,limit), HttpStatus.OK);
+        return "redirect:/userViewOwnCards/all/"+idUser;
     }
-    @PutMapping("/userOp/{name}/status/{status}")
-    public ResponseEntity <Card> changeStatus(@PathVariable("name") String name,@PathVariable("status") boolean status)  {
+    @PostMapping("/userOp/status")
+    public String changeStatus(@RequestParam("id") Long id,@RequestParam("status") boolean status)  {
 
-        return new ResponseEntity<Card>(cardService.changeStatus(name,status), HttpStatus.OK);
+        cardService.changeStatus(id,status);
+        Card card= cardService.getCardById(id);
+        Long idUser= card.getUser().getId();
+
+        return "redirect:/userViewOwnCards/all/"+idUser;
     }
 
     @PostMapping("/adminCard/save")
@@ -70,31 +118,27 @@ public class CardController {
         return new ResponseEntity<Card>(cardService.saveCard(card),HttpStatus.CREATED);
     }
 
-    @PutMapping("/admin/updateCard/{name}")
+
+    @GetMapping("/admin/deleteCard/{id}")
     @PreAuthorize("hasAuthority('write')")
-    public ResponseEntity<Card> updateCard (@RequestBody Card card, @PathVariable("name") String name){
+    public String deleteCard(@PathVariable("id") Long id){
+        cardService.deleteCard(id);
 
-     return new ResponseEntity<Card>(cardService.updateCard(card, name),HttpStatus.OK);
-    }
-
-    @DeleteMapping("/admin/delete/{name}")
-    @PreAuthorize("hasAuthority('write')")
-    public ResponseEntity<String> deleteCard(@PathVariable("name") String name){
-        cardService.deleteCard(name);
-
-        return new ResponseEntity<String>("Card deleted succesfully", HttpStatus.OK);
+        return "register_success";
     }
 
     @GetMapping("/adminViewCards/all")
     @PreAuthorize("hasAuthority('write')")
     public String getAllCreditCards(Model model){
         model.addAttribute("cards", cardService.getAllCreditCards());
-        return "viewAllCards";
+
+        return "viewCards";
     }
 
     @GetMapping("/userViewOwnCards/all/{id}")
     public String getOwnCreditCards(@PathVariable("id") Long id, Model model){
         model.addAttribute("cards", cardService.getAllCreditCardsWithId(id));
+
         return "view_own_cards";
     }
 

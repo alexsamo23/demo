@@ -6,10 +6,15 @@ import com.example.demo.repositories.AuthorityRepository;
 import com.example.demo.services.IUserService;
 import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.HashSet;
@@ -27,6 +32,12 @@ public class RegistrationController {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @InitBinder
+    public void initBinder(WebDataBinder dataBinder){
+        StringTrimmerEditor stringTrimmerEditor= new StringTrimmerEditor(true);
+        dataBinder.registerCustomEditor(String.class,stringTrimmerEditor);
+    }
 
         @GetMapping("/login")
         public String viewLoginPage() {
@@ -51,7 +62,7 @@ public class RegistrationController {
         return "signup_form.html";
     }
     @PostMapping("/process_register")
-    public String processRegister(User user) {
+    public String processRegister(User user, BindingResult bindingResult) {
 
         if ((userService.getUserWithEmail(user.getEmail())) == null) {
             String encodedPassword = passwordEncoder.encode(user.getPassword());
@@ -66,6 +77,7 @@ public class RegistrationController {
             return "register_success";
         }
         else {
+            bindingResult.addError(new FieldError("user","email", "Email already exists"));
             logger.warning("Exist user with email "+ user.getEmail());
             return "signup_form";
         }

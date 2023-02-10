@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>View cards</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+<div class ="container">
+  <div class = "row">
+    <h1> User cards </h1>
+  </div>
+
+  <div class = "row">
+    <div class = "col-lg-3">
+      <a th:href = "@{/addNewCard}" class = "btn btn-primary btn-sm mb-3"> Add Card</a>
+    </div>
+  </div>
+
+  <table class = "table table-striped table-bordered">
+    <thead class = "table-dark">
+    <tr>
+      <th> Id </th>
+      <th>  Name</th>
+      <th>  Number</th>
+      <th>  CVV </th>
+      <th>  Expire Date </th>
+      <th>  Iban </th>
+      <th>  Daily limit </th>
+      <th>  Status </th>
+      <th>  User Id </th>
+      <th>  User Email </th>
+      <th> Actions </th>
+    </tr>
+    </thead>
+
+
+    <tbody>
+    <tr th:each = "card: ${cards}">
+      <td th:text = "${card.id}"></td>
+      <td th:text = "${card.name}"></td>
+      <td th:text = "${card.number}"></td>
+      <td th:text = "${card.cvv}"></td>
+      <td th:text = "${card.expireDate}"></td>
+      <td th:text = "${card.IBAN}"></td>
+      <td th:text = "${card.dailyLimit}"></td>
+      <td th:text = "${card.status}"></td>
+      <td th:text = "${card.user.id}"></td>
+      <td th:text = "${card.user.email}"></td>
+      <td>
+
+        <button type="button" class="btn btn-success btn-sm mt-2"
+                data-toggle="modal"
+                th:attr="data-target='#exampleModalCenter0'+*{card.id}">Check balance
+        </button> <!-- Modal -->
+
+        <div class="modal fade"
+             th:id="*{'exampleModalCenter0'+{card.id}}" tabindex="-1"
+             role="dialog" aria-labelledby="exampleModalCenterTitle0"
+             aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle0">Balance</h5>
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+
+              <div class="modal-body">
+                <form action="/userCheck" method="post">
+                  <div class="form-group">
+                    <input type="hidden" th:value="*{card.id}" class="form-control" name="id">
+                    <label>Account balance (Ron) </label> <input type="text" name="amount" th:value="*{card.sold}" class="form-control"> <br>
+                  </div>
+                </form>
+
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary"
+                        data-dismiss="modal">Close</button>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <button type="button" class="btn btn-success btn-sm mt-2"
+                data-toggle="modal"
+                th:attr="data-target='#exampleModalCenter2'+*{card.id}">Change daily limit
+        </button> <!-- Modal -->
+
+        <div class="modal fade"
+             th:id="*{'exampleModalCenter2'+{card.id}}" tabindex="-1"
+             role="dialog" aria-labelledby="exampleModalCenterTitle2"
+             aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle2">Limit</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+
+              <div class="modal-body">
+                <form action="/userOp/limit" method="post">
+                  <div class="form-group">
+                    <input type="hidden" th:value="*{card.id}" class="form-control" name="id">
+                    <label>Change daily limit</label> <input type="text"
+                                                             name="limit" class="form-control"> <br>
+                    <button type="submit" class="btn btn-primary">submit</button>
+                  </div>
+                </form>
+
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary"
+                        data-dismiss="modal">Close</button>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button type="button" class="btn btn-success btn-sm mt-2"
+                data-toggle="modal"
+                th:attr="data-target='#exampleModalCenter3'+*{card.id}">Change status
+        </button> <!-- Modal -->
+
+        <div class="modal fade"
+             th:id="*{'exampleModalCenter3'+{card.id}}" tabindex="-1"
+             role="dialog" aria-labelledby="exampleModalCenterTitle3"
+             aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle3">Status</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+
+              <div class="modal-body">
+                <form action="/userOp/status" method="post">
+                  <div class="form-group">
+                    <input type="hidden" th:value="*{card.id}" class="form-control" name="id">
+                    <label>Change status</label> <input type="text"
+                                                        name="status" class="form-control"> <br>
+                    <button type="submit" class="btn btn-primary">submit</button>
+                  </div>
+                </form>
+
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary"
+                        data-dismiss="modal">Close</button>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <a th:href = "@{/editCard/{id} (id=${card.id})}"
+           class = "btn btn-primary">Update</a>
+
+        <a th:href = "@{/admin/deleteCard/{id}(id=${card.id})}"
+           class = "btn btn-danger">Delete</a>
+
+      </td>
+
+
+    </tr>
+    </tbody>
+
+  </table>
+
+</div>
+</body>
+</html>

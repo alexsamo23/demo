@@ -10,18 +10,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
-
 
 @Controller
-//@RequestMapping("/card")
+
 public class CardController {
     @Autowired
     private ICardService cardService;
@@ -37,14 +34,13 @@ public class CardController {
 
     @PostMapping("/processAddNewCard")
     public String processCard(Card card) {
-
         cardService.saveCard(card);
-        return "register_success";
+
+        return "redirect:/adminViewCards/all";
     }
 
     @GetMapping("/editCard/{id}")
     public String editCardForm (@PathVariable("id") Long id, Model model) {
-
         model.addAttribute("card", cardService.getCardById(id));
 
         return "edit_card";
@@ -52,20 +48,16 @@ public class CardController {
 
     @PostMapping("/admin/updateCard/{id}")
     @PreAuthorize("hasAuthority('write')")
-    public String updateCard(@PathVariable ("id") Long id,@ModelAttribute("card") Card card, Model model) {
-
+    public String updateCard(@PathVariable ("id") Long id,@ModelAttribute("card") Card card) {
         cardService.updateCard(card, id);
         logger.info("User updated successfully");
 
-        return "register_success";
+        return "redirect:/adminViewCards/all";
     }
 
     @PostMapping("/userCheck")
     public String checkBalance(@RequestParam("id") Long id, Model model) throws ResourceNotFoundException {
-
         model.addAttribute("sold",cardService.checkBalance(id));
-        Card card= cardService.getCardById(id);
-        Long idUser= card.getUser().getId();
 
         return "redirect:/userViewOwnCards";
 
@@ -73,12 +65,8 @@ public class CardController {
 
     @PostMapping("/deposit")
     public String deposit(@RequestParam("id") Long id, @RequestParam("amount") int amount ){
-
         cardService.deposit(id,amount);
         logger.info("Deposit successfully");
-        Card card= cardService.getCardById(id);
-        Long idUser= card.getUser().getId();
-
 
         return "redirect:/userViewOwnCards";
     }
@@ -88,9 +76,6 @@ public class CardController {
 
         cardService.withdraw(id,amount);
         logger.info("Withdraw successfully");
-        Card card= cardService.getCardById(id);
-        Long idUser= card.getUser().getId();
-
 
         return "redirect:/userViewOwnCards";
     }
@@ -99,25 +84,13 @@ public class CardController {
     public String changeLimit(@RequestParam("id") Long id,@RequestParam("limit") int limit)  {
         cardService.changeLimit(id,limit);
 
-        Card card= cardService.getCardById(id);
-        Long idUser= card.getUser().getId();
-
         return "redirect:/userViewOwnCards";
     }
     @PostMapping("/userOp/status")
     public String changeStatus(@RequestParam("id") Long id,@RequestParam("status") boolean status)  {
-
         cardService.changeStatus(id,status);
-        Card card= cardService.getCardById(id);
-        Long idUser= card.getUser().getId();
 
         return "redirect:/userViewOwnCards";
-    }
-
-    @PostMapping("/adminCard/save")
-    @PreAuthorize("hasAuthority('write')")
-    public ResponseEntity<Card> saveCard (@RequestBody Card card){
-        return new ResponseEntity<Card>(cardService.saveCard(card),HttpStatus.CREATED);
     }
 
 
@@ -126,7 +99,7 @@ public class CardController {
     public String deleteCard(@PathVariable("id") Long id){
         cardService.deleteCard(id);
 
-        return "register_success";
+        return "redirect:/adminViewCards/all";
     }
 
     @GetMapping("/adminViewCards/all")
@@ -138,14 +111,10 @@ public class CardController {
     }
 
     @GetMapping("/userViewOwnCards")
-    //public String getOwnCreditCards(@PathVariable("id") Long id, Model model){
-      //  model.addAttribute("cards", cardService.getAllCreditCardsWithId(id));
-
-        public String editOwnCreditCards (Principal principal, Model model) {
-
-            SecurityUser userCustom = (SecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            long userId= userCustom.getUser().getId();
-            model.addAttribute("cards",cardService.getAllCreditCardsWithId(userId));
+    public String editOwnCreditCards (Model model) {
+        SecurityUser userCustom = (SecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        long userId= userCustom.getUser().getId();
+        model.addAttribute("cards",cardService.getAllCreditCardsWithId(userId));
 
         return "view_own_cards";
     }

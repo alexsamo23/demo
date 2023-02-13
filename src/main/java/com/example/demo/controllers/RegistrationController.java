@@ -4,7 +4,6 @@ import com.example.demo.entities.Authority;
 import com.example.demo.entities.User;
 import com.example.demo.repositories.AuthorityRepository;
 import com.example.demo.services.IUserService;
-import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.security.crypto.password.PasswordEncoder;

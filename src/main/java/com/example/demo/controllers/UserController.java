@@ -8,14 +8,11 @@ import com.example.demo.services.IUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.security.Principal;
 
 
 @Controller
@@ -29,12 +26,6 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping("/admin/save")
-    @PreAuthorize("hasAuthority('write')")
-    public ResponseEntity<User> saveUser(@RequestBody User user){
-        
-        return new ResponseEntity<>(userService.saveUser(user),HttpStatus.CREATED);
-    }
 
     @GetMapping("/admin/delete/{email}")
     @PreAuthorize("hasAuthority('write')")
@@ -43,7 +34,7 @@ public class UserController {
         userService.deleteUser((email));
         logger.info("User with email "+ email +" deleted successfully");
 
-        return "register_success";
+        return "redirect:/admin/all";
     }
 
     @GetMapping("/editUser/{id}")
@@ -56,16 +47,16 @@ public class UserController {
 
     @PostMapping("/admin/update/{id}")
     @PreAuthorize("hasAuthority('write')")
-    public String updateUser(@PathVariable ("id") Long id,@ModelAttribute("user") User user, Model model) {
+    public String updateUser(@PathVariable ("id") Long id,@ModelAttribute("user") User user) {
 
         userService.updateUser(user, id);
         logger.info("User updated successfully");
 
-        return "register_success";
+        return "redirect:/admin/all";
     }
 
     @GetMapping("/viewOwnDetails")
-    public String editOwnForm (Principal principal, Model model) {
+    public String editOwnForm (Model model) {
 
         SecurityUser userCustom = (SecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         long userId= userCustom.getUser().getId();
@@ -93,13 +84,13 @@ public class UserController {
 
 
     @PostMapping("/phoneAndEmail/{id}")
-    public String updatePhone(@PathVariable("id") Long id,@ModelAttribute("user") User user , Model model){
+    public String updatePhone(@PathVariable("id") Long id,@ModelAttribute("user") User user){
 
         userService.updateEmail(id,user.getEmail());
         userService.updatePhone(id,user.getPhoneNumber());
         logger.info("User updated successfully");
 
-        return  "register_success";
+        return  "redirect:/viewOwnDetails";
     }
 
     @ExceptionHandler(value = ResourceNotFoundException.class)

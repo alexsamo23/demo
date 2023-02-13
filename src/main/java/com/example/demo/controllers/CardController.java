@@ -1,10 +1,10 @@
 package com.example.demo.controllers;
 
 import com.example.demo.entities.Card;
-import com.example.demo.entities.User;
 import com.example.demo.exceptions.ErrorResponse;
 import com.example.demo.exceptions.InvalidWithdrawException;
 import com.example.demo.exceptions.ResourceNotFoundException;
+import com.example.demo.security.SecurityUser;
 import com.example.demo.services.ICardService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,10 +12,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
 
 
 @Controller
@@ -65,7 +67,7 @@ public class CardController {
         Card card= cardService.getCardById(id);
         Long idUser= card.getUser().getId();
 
-        return "redirect:/userViewOwnCards/all/"+idUser;
+        return "redirect:/userViewOwnCards";
 
     }
 
@@ -78,7 +80,7 @@ public class CardController {
         Long idUser= card.getUser().getId();
 
 
-        return "redirect:/userViewOwnCards/all/"+idUser;
+        return "redirect:/userViewOwnCards";
     }
 
     @PostMapping("/withdraw")
@@ -90,7 +92,7 @@ public class CardController {
         Long idUser= card.getUser().getId();
 
 
-        return "redirect:/userViewOwnCards/all/"+idUser;
+        return "redirect:/userViewOwnCards";
     }
 
     @PostMapping("/userOp/limit")
@@ -100,7 +102,7 @@ public class CardController {
         Card card= cardService.getCardById(id);
         Long idUser= card.getUser().getId();
 
-        return "redirect:/userViewOwnCards/all/"+idUser;
+        return "redirect:/userViewOwnCards";
     }
     @PostMapping("/userOp/status")
     public String changeStatus(@RequestParam("id") Long id,@RequestParam("status") boolean status)  {
@@ -109,7 +111,7 @@ public class CardController {
         Card card= cardService.getCardById(id);
         Long idUser= card.getUser().getId();
 
-        return "redirect:/userViewOwnCards/all/"+idUser;
+        return "redirect:/userViewOwnCards";
     }
 
     @PostMapping("/adminCard/save")
@@ -135,9 +137,15 @@ public class CardController {
         return "viewCards";
     }
 
-    @GetMapping("/userViewOwnCards/all/{id}")
-    public String getOwnCreditCards(@PathVariable("id") Long id, Model model){
-        model.addAttribute("cards", cardService.getAllCreditCardsWithId(id));
+    @GetMapping("/userViewOwnCards")
+    //public String getOwnCreditCards(@PathVariable("id") Long id, Model model){
+      //  model.addAttribute("cards", cardService.getAllCreditCardsWithId(id));
+
+        public String editOwnCreditCards (Principal principal, Model model) {
+
+            SecurityUser userCustom = (SecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            long userId= userCustom.getUser().getId();
+            model.addAttribute("cards",cardService.getAllCreditCardsWithId(userId));
 
         return "view_own_cards";
     }

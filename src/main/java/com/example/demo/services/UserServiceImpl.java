@@ -19,16 +19,16 @@ public class UserServiceImpl implements IUserService {
 //optional
     //stream
 
-    public User updateEmail(String name, String email) {
-        User user = userRepository.findUserByFirstName(name);
+    public User updateEmail(Long id, String email) {
+        User user = userRepository.findUserById(id);
         user.setEmail(email);
         userRepository.save(user);
 
         return user;
     }
 
-    public User updatePhone(String name, String phone){
-        User user = userRepository.findUserByFirstName(name);
+    public User updatePhone(Long id, String phone){
+        User user = userRepository.findUserById(id);
         user.setPhoneNumber(phone);
         userRepository.save(user);
 

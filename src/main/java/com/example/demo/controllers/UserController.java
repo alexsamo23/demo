@@ -92,11 +92,11 @@ public class UserController {
     }
 
 
-    @PostMapping("/phoneAndEmail/{name}")
-    public String updatePhone(@PathVariable("name") String name,@ModelAttribute("user") User user , Model model){
+    @PostMapping("/phoneAndEmail/{id}")
+    public String updatePhone(@PathVariable("id") Long id,@ModelAttribute("user") User user , Model model){
 
-        userService.updateEmail(name,user.getEmail());
-        userService.updatePhone(name,user.getPhoneNumber());
+        userService.updateEmail(id,user.getEmail());
+        userService.updatePhone(id,user.getPhoneNumber());
         logger.info("User updated successfully");
 
         return  "register_success";

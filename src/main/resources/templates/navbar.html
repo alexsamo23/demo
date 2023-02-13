@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head>
+    <title>NavigationBar</title>
+
+</head>
+<body>
+<div class="container-fluid">
+    <nav th:fragment="navbar" class="navbar navbar-expand-md navbar-dark bg-info">
+        <!-- <a class="navbar-brand" >Navbar</a> -->
+        <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbarNav">
+            <span class="navbar-toggle-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active" style="font-size:20px">
+                    <span class="nav-link"><a th:href="@{/viewOwnDetails}">View Account Details </a></span>
+                </li>
+                <li class="nav-item" style="font-size:20px">
+                    <span class="nav-link"><a th:href="@{/userViewOwnCards}">View Associated Cards</a></span>
+                </li>
+
+                <li sec:authorize="hasAuthority('write')" class="nav-item" style="font-size:20px">
+                    <span class="nav-link"><a th:href="@{/admin/all}">View All Users</a></span>
+                </li>
+                <li sec:authorize="hasAuthority('write')" class="nav-item" style="font-size:20px">
+                     <span class="nav-link"><a th:href="@{/adminViewCards/all}">View All Cards</a></span>
+                </li>
+            </ul>
+        <ul class="text-right list-inline">
+
+            <li class="nav-item" style="font-size:20px">
+                <span class="nav-link"><a th:href="@{/logout}">Logout</a></span>
+            </li>
+        </ul>
+</div>
+</nav>
+</div>
+</body>
+</html>

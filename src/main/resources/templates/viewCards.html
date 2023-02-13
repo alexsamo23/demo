@@ -2,12 +2,10 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <title>View cards</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <div th:insert = "~{bootstrap_fragment :: bootstrap_fragment}">  </div>
 </head>
+
+<div th:insert = "~{navbar :: navbar}">  </div>
 <body>
 
 <div class ="container">
@@ -76,7 +74,7 @@
                 <form action="/userCheck" method="post">
                   <div class="form-group">
                     <input type="hidden" th:value="*{card.id}" class="form-control" name="id">
-                    <label>Account balance (Ron) </label> <input type="text" name="amount" th:value="*{card.sold}" class="form-control"> <br>
+                    <label>Account balance (Ron) </label> <input type="text" name="amount" th:value="*{card.sold}" class="form-control" readonly> <br>
                   </div>
                 </form>
 
@@ -151,8 +149,11 @@
                 <form action="/userOp/status" method="post">
                   <div class="form-group">
                     <input type="hidden" th:value="*{card.id}" class="form-control" name="id">
-                    <label>Change status</label> <input type="text"
-                                                        name="status" class="form-control"> <br>
+                    <label>Change status</label> <br>
+                    <select id="status" name="status">
+                      <option value="true">Activated</option>
+                      <option value="false">Deactivated</option>
+                    </select>
                     <button type="submit" class="btn btn-primary">submit</button>
                   </div>
                 </form>

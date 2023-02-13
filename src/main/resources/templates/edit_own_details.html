@@ -16,7 +16,7 @@
     <div class ="col-lg-6 col-md-6 col-sm-6 container justify-content-center card">
       <h1 class = "text-center"> Update Account Details </h1>
       <div class = "card-body">
-        <form th:action="@{/phoneAndEmail/{name} (name=${user.firstName})}" th:object = "${user}" method="POST">
+        <form th:action="@{/phoneAndEmail/{id} (id=${user.id})}" th:object = "${user}" method="POST">
 
 
 

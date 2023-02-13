@@ -1,0 +1,25 @@
+.navbar-nav .nav-link {
+    margin-right: 25px;
+    margin-left: 25px;
+}
+ul {
+  left: 0;
+  top: 50%;
+  text-align: center;
+  list-style-type: none;
+  height: 100px;     /*          <-- change this line*/
+}
+li {
+  display: inline-block;
+  height: 100 px;
+}
+li a {
+  display: inline-block;
+  line-height: 100px; /*          <-- change this line*/
+  text-align: center;
+  padding-left: 50px;
+  padding-right: 50px;
+  text-decoration: none;
+  margin: 0;
+  height: 100px;
+}

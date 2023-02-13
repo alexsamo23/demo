@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="ISO-8859-1">
+
   <title>Users Management System</title>
-  <link rel="stylesheet"
-        href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
-        crossorigin="anonymous">
+  <div th:insert = "~{bootstrap_fragment :: bootstrap_fragment}">  </div>
 </head>
+
+<div th:insert = "~{navbar :: navbar}">  </div>
 <body>
 
 <div class ="container">
@@ -38,10 +37,10 @@
         <a th:href = "@{/editDetails/{id} (id=${user.id})}"
              class = "btn btn-primary">Update Details</a>
 
-
+<!--
           <a th:href = "@{/userViewOwnCards/all/{id} (id=${user.id})}"
              class = "btn btn-danger">Show cards</a>
-
+-->
         </td>
       </tbody>
 

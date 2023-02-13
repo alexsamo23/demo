@@ -6,8 +6,8 @@ import java.util.List;
 
 public interface IUserService {
 
-    User updateEmail(String name, String email);
-    User updatePhone(String name, String phone);
+    User updateEmail(Long id, String email);
+    User updatePhone(Long id, String phone);
     String deleteUser(String email);
     User updateUser(User user, Long id);
     User updateUser1(User user);

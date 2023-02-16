@@ -10,7 +10,6 @@ public interface IUserService {
     User updatePhone(Long id, String phone);
     String deleteUser(String email);
     User updateUser(User user, Long id);
-    User updateUser1(User user);
     User getUserById(Long id);
     User getUserWithEmail(String email);
     User saveUser(User user);

@@ -38,7 +38,8 @@
       <td th:text = "${card.expireDate}"></td>
       <td th:text = "${card.IBAN}"></td>
       <td th:text = "${card.dailyLimit}"></td>
-      <td th:text = "${card.status}"></td>
+      <td th:text="${card.status} ? 'ACTIVATED' : 'DEACTIVATED'" />
+
      <td>
 
        <button type="button" class="btn btn-success btn-sm mt-2"
@@ -103,7 +104,9 @@
                  <input type="hidden" th:value="*{card.id}" class="form-control" name="id">
                   <label>Introduce amount</label> <input type="text"
                                                          name="amount" class="form-control"> <br>
+
                   <button type="submit" class="btn btn-primary">submit</button>
+
                 </div>
               </form>
 

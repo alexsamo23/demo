@@ -23,7 +23,7 @@ import java.util.logging.Logger;
 @Controller
 public class RegistrationController {
 
-    private static Logger logger = Logger.getLogger(RegistrationController.class.getName());
+    private static final Logger logger = Logger.getLogger(RegistrationController.class.getName());
     @Autowired
     private IUserService userService;
     @Autowired

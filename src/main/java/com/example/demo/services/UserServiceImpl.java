@@ -74,13 +74,6 @@ public class UserServiceImpl implements IUserService {
        return existingUser;
     }
 
-    public User updateUser1(User user){
-
-      return  userRepository.save(user);
-
-
-    }
-
 
 
 

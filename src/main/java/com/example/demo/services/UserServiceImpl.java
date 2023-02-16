@@ -74,7 +74,9 @@ public class UserServiceImpl implements IUserService {
        return existingUser;
     }
 
-
+    public User getByKeyword(String keyword){
+        return userRepository.findUserByEmail(keyword);
+    }
 
 
 

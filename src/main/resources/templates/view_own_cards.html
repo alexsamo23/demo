@@ -102,9 +102,9 @@
               <form action="/deposit" method="post">
                 <div class="form-group">
                  <input type="hidden" th:value="*{card.id}" class="form-control" name="id">
-                  <label>Introduce amount</label> <input type="text"
-                                                         name="amount" class="form-control"> <br>
-
+                  <label>Introduce amount</label>
+                  <input min='0' type="text" name="amount" onkeypress="return (event.charCode == 8 || event.charCode == 0) ? null : event.charCode >= 48 && event.charCode <= 57">
+               <!--   <input type="text" name="amount" class="form-control"> <br>-->
                   <button type="submit" class="btn btn-primary">submit</button>
 
                 </div>
@@ -143,7 +143,7 @@
                  <div class="form-group">
                    <input type="hidden" th:value="*{card.id}" class="form-control" name="id">
                    <label>Introduce amount</label> <input type="text"
-                                                          name="amount" class="form-control"> <br>
+                                                          name="amount" th:value="${amount}" class="form-control" > <br>
                    <button type="submit" class="btn btn-primary">submit</button>
                  </div>
                </form>

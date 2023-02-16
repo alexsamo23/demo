@@ -12,8 +12,12 @@
 <div class ="container">
   <div class = "row">
     <h1> List Users </h1>
+    <form th:action="@{/search}" method="post">
+      <input type="text" name="keyword" th:value="${keyword}"  placeholder="Find by Email" size="50" >
+      <button type="submit" class="btn btn-info" >Search</button>
+      <button type="submit" class="btn btn-info" >Reset</button>
+    </form>
   </div>
-
   <div class = "row">
     <div class = "col-lg-3">
       <a th:href = "@{/register}" class = "btn btn-primary btn-sm mb-3"> Add User</a>

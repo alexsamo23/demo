@@ -23,11 +23,12 @@ public class CardController {
     @Autowired
     private ICardService cardService;
 
+    private final String page ="redirect:/userViewOwnCards";
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @GetMapping("/addNewCard")
     public String showAddCardForm(Card card,Model model) {
-        model.addAttribute("card", card);
+        model.addAttribute("card",card);
 
         return "add_card_form";
     }
@@ -59,8 +60,7 @@ public class CardController {
     public String checkBalance(@RequestParam("id") Long id, Model model) throws ResourceNotFoundException {
         model.addAttribute("sold",cardService.checkBalance(id));
 
-        return "redirect:/userViewOwnCards";
-
+        return page;
     }
 
     @PostMapping("/deposit")
@@ -68,29 +68,28 @@ public class CardController {
         cardService.deposit(id,amount);
         logger.info("Deposit successfully");
 
-        return "redirect:/userViewOwnCards";
+        return page;
     }
 
     @PostMapping("/withdraw")
     public String withdraw (@RequestParam("id") Long id, @RequestParam("amount") int amount ) throws InvalidWithdrawException {
-
         cardService.withdraw(id,amount);
         logger.info("Withdraw successfully");
 
-        return "redirect:/userViewOwnCards";
+        return page;
     }
 
     @PostMapping("/userOp/limit")
     public String changeLimit(@RequestParam("id") Long id,@RequestParam("limit") int limit)  {
         cardService.changeLimit(id,limit);
 
-        return "redirect:/userViewOwnCards";
+        return page;
     }
     @PostMapping("/userOp/status")
     public String changeStatus(@RequestParam("id") Long id,@RequestParam("status") boolean status)  {
         cardService.changeStatus(id,status);
 
-        return "redirect:/userViewOwnCards";
+        return page;
     }
 
 

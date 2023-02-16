@@ -46,7 +46,7 @@
       <td th:text = "${card.expireDate}"></td>
       <td th:text = "${card.IBAN}"></td>
       <td th:text = "${card.dailyLimit}"></td>
-      <td th:text = "${card.status}"></td>
+      <td th:text="${card.status} ? 'ACTIVATED' : 'DEACTIVATED'" />
       <td th:text = "${card.user.id}"></td>
       <td th:text = "${card.user.email}"></td>
       <td>

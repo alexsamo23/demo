@@ -1,6 +1,5 @@
 package com.example.demo.services;
 import com.example.demo.entities.Card;
-import com.example.demo.entities.User;
 import com.example.demo.exceptions.InvalidWithdrawException;
 import com.example.demo.exceptions.ResourceNotFoundException;
 import com.example.demo.repositories.CardRepository;
@@ -56,13 +55,12 @@ public class CardServiceImpl implements ICardService {
         cardRepository.save(card);
 
         return card;
-
     }
 
     @Override
     public Card withdraw(Long id, int amount) throws InvalidWithdrawException {
         Card card = cardRepository.findCardById(id);
-        if(card.getSold()>amount) {
+        if(card.getSold() > amount) {
             card.setSold(card.getSold() - amount);
             cardRepository.save(card);
 
@@ -70,9 +68,7 @@ public class CardServiceImpl implements ICardService {
         }
         else {
              throw new InvalidWithdrawException("Fonduri insuficiente");
-
         }
-
     }
 
 
@@ -84,7 +80,6 @@ public class CardServiceImpl implements ICardService {
         cardRepository.save(card);
 
         return card;
-
     }
 
     @Override
@@ -94,7 +89,6 @@ public class CardServiceImpl implements ICardService {
         cardRepository.save(card);
 
         return card;
-
     }
 
     @Override
@@ -103,7 +97,7 @@ public class CardServiceImpl implements ICardService {
     }
     @Override
     public Card updateCard(Card card, Long id){
-        Card existingCard =cardRepository.findCardById(id);
+        Card existingCard = cardRepository.findCardById(id);
         existingCard.setId(id);
         existingCard.setName(card.getName());
         existingCard.setNumber(card.getNumber());
@@ -117,7 +111,6 @@ public class CardServiceImpl implements ICardService {
         cardRepository.save(existingCard);
 
         return existingCard;
-
     }
 
     @Override

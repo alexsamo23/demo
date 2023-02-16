@@ -15,6 +15,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @Controller
 public class UserController {
@@ -81,6 +83,21 @@ public class UserController {
 
         return  "redirect:/viewOwnDetails";
     }
+
+    @PostMapping("/search")
+    public String getByKeyword(Model model, String keyword) {
+        if(keyword!=null && keyword!="") {
+             User user = userService.getByKeyword(keyword);
+            model.addAttribute("users",user);
+
+        }else {
+            List<User> list= userService.getAllUsers();
+            model.addAttribute("users",list);
+
+        }
+        return "viewUsers";
+    }
+
 
     @ExceptionHandler(value = ResourceNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)

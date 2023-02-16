@@ -1,11 +1,13 @@
 package com.example.demo.controllers;
 
 import com.example.demo.entities.Card;
+import com.example.demo.entities.User;
 import com.example.demo.exceptions.ErrorResponse;
 import com.example.demo.exceptions.InvalidWithdrawException;
 import com.example.demo.exceptions.ResourceNotFoundException;
 import com.example.demo.security.SecurityUser;
 import com.example.demo.services.ICardService;
+import com.example.demo.services.IUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,13 +18,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @Controller
 
 public class CardController {
     @Autowired
     private ICardService cardService;
-
+    @Autowired
+    private IUserService userService;
     private final String page ="redirect:/userViewOwnCards";
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
@@ -83,13 +88,13 @@ public class CardController {
     public String changeLimit(@RequestParam("id") Long id,@RequestParam("limit") int limit)  {
         cardService.changeLimit(id,limit);
 
-        return page;
+        return "register_success";
     }
     @PostMapping("/userOp/status")
     public String changeStatus(@RequestParam("id") Long id,@RequestParam("status") boolean status)  {
         cardService.changeStatus(id,status);
 
-        return page;
+        return "register_success";
     }
 
 
@@ -116,6 +121,21 @@ public class CardController {
         model.addAttribute("cards",cardService.getAllCreditCardsWithId(userId));
 
         return "view_own_cards";
+    }
+
+    @PostMapping("/searchCards")
+    public String getByKeyword(Model model, String keyword) {
+        if(keyword!=null && keyword!="") {
+            User user = userService.getUserWithEmail(keyword);
+            List<Card> cards = cardService.getAllCreditCardsWithId(user.getId());
+            model.addAttribute("cards",cards);
+
+        }else {
+            List<Card> list= cardService.getAllCreditCards();
+            model.addAttribute("cards",list);
+
+        }
+        return "viewCards";
     }
 
    @ExceptionHandler(value = InvalidWithdrawException.class)

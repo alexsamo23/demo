@@ -14,5 +14,6 @@ public interface IUserService {
     User getUserWithEmail(String email);
     User saveUser(User user);
     List<User> getAllUsers();
+    User getByKeyword(String keyword);
 
 }

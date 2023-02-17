@@ -91,7 +91,7 @@ class CardServiceImplTest {
     }
 
     @Test
-    void DepositShouldBeDoneCorrectly() {
+    void DepositShouldBeDoneCorrectly() throws InvalidWithdrawException {
         //given
         Card card1 = new Card();
         card1.setId(1);

@@ -1,11 +1,15 @@
 package com.example.demo.services;
+import com.example.demo.entities.AccountTransaction;
+import com.example.demo.entities.AccountUtils;
 import com.example.demo.entities.Card;
 import com.example.demo.exceptions.InvalidWithdrawException;
 import com.example.demo.exceptions.ResourceNotFoundException;
 import com.example.demo.repositories.CardRepository;
+import com.example.demo.repositories.TransactionsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,6 +18,8 @@ public class CardServiceImpl implements ICardService {
 
     @Autowired
     private CardRepository cardRepository;
+    @Autowired
+    TransactionsRepository transactionsRepository;
 
     @Override
     public List<Card> getAllCreditCards(){
@@ -50,28 +56,56 @@ public class CardServiceImpl implements ICardService {
     }
 
     @Override
-    public Card deposit(Long id, int amount) {
+    public Card deposit(Long id, int amount) throws InvalidWithdrawException {
         Card card = cardRepository.findCardById(id);
-        card.setSold(card.getSold()+amount );
-        cardRepository.save(card);
+        if(card.isStatus()) {
+            card.setSold(card.getSold() + amount);
+            cardRepository.save(card);
+        }
+        else throw new InvalidWithdrawException(" Card blocat. Activati cardul inainte de a repeta operatia.");
 
         return card;
     }
 
     @Override
     public Card withdraw(Long id, int amount) throws InvalidWithdrawException {
+    int total =0;
         Card card = cardRepository.findCardById(id);
-        if(card.getSold() > amount) {
-            card.setSold(card.getSold() - amount);
-            cardRepository.save(card);
+        if(card.isStatus()) {
 
-            return card;
+            if (card.getSold() >= amount) {
+
+                List<AccountTransaction> withdrawals = transactionsRepository.findByDateBetweenAndCardId(AccountUtils.getStartOfDay(new Date()),
+                        AccountUtils.getEndOfDay(new Date()), id);
+
+                //  if (withdrawals.size() >= 0) {
+
+                for (AccountTransaction accountTransaction : withdrawals) {
+                    total += accountTransaction.getAmount();
+                }
+
+                if ((total + amount) > card.getDailyLimit()) {
+
+                    throw new InvalidWithdrawException("Limita maxima a fost atinsa");
+
+                } else {
+                    AccountTransaction accountTransaction = new AccountTransaction();
+                    accountTransaction.setAmount(amount);
+                    accountTransaction.setDate(new Date());
+                    accountTransaction.setCard(card);
+                    transactionsRepository.save(accountTransaction);
+
+                    card.setSold(card.getSold() - amount);
+                    cardRepository.save(card);
+                }
+                // }
+                return card;
+            } else {
+                throw new InvalidWithdrawException("Fonduri insuficiente");
+            }
         }
-        else {
-             throw new InvalidWithdrawException("Fonduri insuficiente");
-        }
+        else throw new InvalidWithdrawException("Card blocat. Activati cardul inainte de a repeta operatia.");
     }
-
 
 
     @Override

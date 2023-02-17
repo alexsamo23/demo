@@ -2,7 +2,7 @@ package com.example.demo.controllers;
 
 import com.example.demo.entities.Card;
 import com.example.demo.entities.User;
-import com.example.demo.exceptions.ErrorResponse;
+
 import com.example.demo.exceptions.InvalidWithdrawException;
 import com.example.demo.exceptions.ResourceNotFoundException;
 import com.example.demo.security.SecurityUser;
@@ -11,7 +11,6 @@ import com.example.demo.services.IUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -22,7 +21,6 @@ import java.util.List;
 
 
 @Controller
-
 public class CardController {
     @Autowired
     private ICardService cardService;
@@ -69,7 +67,7 @@ public class CardController {
     }
 
     @PostMapping("/deposit")
-    public String deposit(@RequestParam("id") Long id, @RequestParam("amount") int amount ){
+    public String deposit(@RequestParam("id") Long id, @RequestParam("amount") int amount ) throws InvalidWithdrawException {
         cardService.deposit(id,amount);
         logger.info("Deposit successfully");
 
@@ -129,32 +127,11 @@ public class CardController {
             User user = userService.getUserWithEmail(keyword);
             List<Card> cards = cardService.getAllCreditCardsWithId(user.getId());
             model.addAttribute("cards",cards);
-
-        }else {
+        }
+        else {
             List<Card> list= cardService.getAllCreditCards();
             model.addAttribute("cards",list);
-
         }
         return "viewCards";
     }
-
-   @ExceptionHandler(value = InvalidWithdrawException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrorResponse
-    handleInvalidWithdrawException(
-            InvalidWithdrawException ex)
-    {
-        return new ErrorResponse(HttpStatus.CONFLICT.value(),
-                ex.getMessage());
-    }
-    @ExceptionHandler(value = ResourceNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse
-    handleResourceNotFoundException(
-           ResourceNotFoundException ex)
-    {
-        return new ErrorResponse(HttpStatus.NOT_FOUND.value(),
-                ex.getMessage());
-    }
-
 }

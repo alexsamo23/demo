@@ -3,6 +3,8 @@ package com.example.demo.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Set;
+
 @Data
 @Entity
 @Table(name="card")
@@ -31,5 +33,8 @@ public class Card {
     @ManyToOne
     @JoinColumn(name="user_id", nullable=false)
     private User user;
+
+    @OneToMany(mappedBy="card", cascade = CascadeType.ALL)
+    private Set<AccountTransaction> accountTransactions;
 
 }

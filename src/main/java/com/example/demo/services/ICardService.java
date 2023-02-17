@@ -12,7 +12,7 @@ public interface ICardService {
     Card getCardByName(String name);
     Card getCardById(Long id);
     int checkBalance(Long id);
-    Card deposit(Long id, int amount);
+    Card deposit(Long id, int amount) throws InvalidWithdrawException;
     Card withdraw(Long id, int amount) throws InvalidWithdrawException;
     Card changeLimit(Long id, int limit);
     Card changeStatus(Long id, boolean status);

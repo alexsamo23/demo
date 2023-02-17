@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+
+  <title>Error</title>
+  <div th:insert = "~{bootstrap_fragment :: bootstrap_fragment}">  </div>
+
+</head>
+<body>
+<h1>Operation failed!</h1>
+<p style="font-size:14px">
+    <td>Message : </td>
+    <td th:text="${ex.message}"/>
+</p>
+
+</body>
+</html>

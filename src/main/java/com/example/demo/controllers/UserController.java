@@ -1,14 +1,11 @@
 package com.example.demo.controllers;
 
 import com.example.demo.entities.User;
-import com.example.demo.exceptions.ErrorResponse;
-import com.example.demo.exceptions.ResourceNotFoundException;
 import com.example.demo.security.SecurityUser;
 import com.example.demo.services.IUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -89,24 +86,12 @@ public class UserController {
         if(keyword!=null && keyword!="") {
              User user = userService.getByKeyword(keyword);
             model.addAttribute("users",user);
-
-        }else {
+        }
+        else {
             List<User> list= userService.getAllUsers();
             model.addAttribute("users",list);
-
         }
         return "viewUsers";
-    }
-
-
-    @ExceptionHandler(value = ResourceNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse
-    handleResourceNotFoundException(
-            ResourceNotFoundException ex) {
-
-        return new ErrorResponse(HttpStatus.NOT_FOUND.value(),
-                ex.getMessage());
     }
 
 }

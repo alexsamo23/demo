@@ -1,7 +1,6 @@
 package com.example.demo.services;
 
 import com.example.demo.entities.AccountTransaction;
-import com.example.demo.entities.Card;
 import com.example.demo.repositories.TransactionsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

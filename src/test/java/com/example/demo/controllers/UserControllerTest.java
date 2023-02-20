@@ -18,8 +18,6 @@ import org.springframework.web.context.WebApplicationContext;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes ={ UserController.class})

@@ -27,6 +27,9 @@
                 <li sec:authorize="hasAuthority('write')" class="nav-item" style="font-size:20px">
                      <span class="nav-link"><a th:href="@{/adminViewCards/all}">View All Cards</a></span>
                 </li>
+                <li sec:authorize="hasAuthority('write')" class="nav-item" style="font-size:20px">
+                    <span class="nav-link"><a th:href="@{/history}">Operations History</a></span>
+                </li>
             </ul>
         <ul class="text-right list-inline">
 

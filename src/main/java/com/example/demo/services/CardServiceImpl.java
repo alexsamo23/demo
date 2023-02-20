@@ -57,10 +57,35 @@ public class CardServiceImpl implements ICardService {
 
     @Override
     public Card deposit(Long id, int amount) throws InvalidWithdrawException {
+        int total =0;
+        int type=2;
         Card card = cardRepository.findCardById(id);
         if(card.isStatus()) {
-            card.setSold(card.getSold() + amount);
-            cardRepository.save(card);
+
+            List<AccountTransaction> deposits = transactionsRepository.findByDateBetweenAndTypeAndCardId(AccountUtils.getStartOfDay(new Date()),
+                    AccountUtils.getEndOfDay(new Date()), type, id);
+
+            //  if (withdrawals.size() >= 0) {
+
+            for (AccountTransaction accountTransaction : deposits) {
+                total += accountTransaction.getAmount();
+            }
+
+            if ((total + amount) > card.getDailyLimit()) {
+
+                throw new InvalidWithdrawException("Limita maxima a fost atinsa");
+
+            } else {
+                AccountTransaction accountTransaction = new AccountTransaction();
+                accountTransaction.setAmount(amount);
+                accountTransaction.setDate(new Date());
+                accountTransaction.setCard(card);
+                accountTransaction.setType(type);
+                transactionsRepository.save(accountTransaction);
+
+                card.setSold(card.getSold() + amount);
+                cardRepository.save(card);
+            }
         }
         else throw new InvalidWithdrawException(" Card blocat. Activati cardul inainte de a repeta operatia.");
 
@@ -70,13 +95,14 @@ public class CardServiceImpl implements ICardService {
     @Override
     public Card withdraw(Long id, int amount) throws InvalidWithdrawException {
     int total =0;
+    int type=1;
         Card card = cardRepository.findCardById(id);
         if(card.isStatus()) {
 
             if (card.getSold() >= amount) {
 
-                List<AccountTransaction> withdrawals = transactionsRepository.findByDateBetweenAndCardId(AccountUtils.getStartOfDay(new Date()),
-                        AccountUtils.getEndOfDay(new Date()), id);
+                List<AccountTransaction> withdrawals = transactionsRepository.findByDateBetweenAndTypeAndCardId(AccountUtils.getStartOfDay(new Date()),
+                        AccountUtils.getEndOfDay(new Date()),type ,id);
 
                 //  if (withdrawals.size() >= 0) {
 
@@ -93,6 +119,7 @@ public class CardServiceImpl implements ICardService {
                     accountTransaction.setAmount(amount);
                     accountTransaction.setDate(new Date());
                     accountTransaction.setCard(card);
+                    accountTransaction.setType(type);
                     transactionsRepository.save(accountTransaction);
 
                     card.setSold(card.getSold() - amount);
@@ -110,7 +137,16 @@ public class CardServiceImpl implements ICardService {
 
     @Override
     public Card changeLimit(Long id, int limit) {
+        int type=3;
         Card card = cardRepository.findCardById(id);
+
+        AccountTransaction accountTransaction = new AccountTransaction();
+        accountTransaction.setAmount(limit);
+        accountTransaction.setDate(new Date());
+        accountTransaction.setCard(card);
+        accountTransaction.setType(type);
+        transactionsRepository.save(accountTransaction);
+
         card.setDailyLimit(limit);
         cardRepository.save(card);
 

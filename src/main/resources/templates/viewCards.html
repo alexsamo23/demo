@@ -3,6 +3,7 @@
 <head>
   <title>View cards</title>
   <div th:insert = "~{bootstrap_fragment :: bootstrap_fragment}">  </div>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css" />
 </head>
 
 <div th:insert = "~{navbar :: navbar}">  </div>
@@ -47,7 +48,24 @@
       <td th:text = "${card.id}"></td>
       <td th:text = "${card.name}"></td>
       <td th:text = "${card.number}"></td>
-      <td th:text = "${card.cvv}"></td>
+
+      <td>
+     <input type="password" name="CVV" th:value="${card.cvv}" id="object" + ${card.id} readonly/>
+       <!-- <i class="bi bi-eye-slash" id="togglePassword"></i> -->
+        <input type="checkbox" id="id${card.id}" onclick="myFunction('${card.id}')">Show CVV
+        <script>
+          function myFunction(password) {
+            var x = document.getElementById(password);
+                 if (x.type === "password") {
+                     x.type = "text";
+                  } else {
+                     x.type = "password";
+                 }
+            }
+
+         </script>
+      </td>
+
       <td th:text = "${card.expireDate}"></td>
       <td th:text = "${card.IBAN}"></td>
       <td th:text = "${card.dailyLimit}"></td>
@@ -181,8 +199,8 @@
 
       </td>
 
-
     </tr>
+
     </tbody>
 
   </table>

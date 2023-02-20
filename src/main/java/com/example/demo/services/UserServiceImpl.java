@@ -1,6 +1,5 @@
 package com.example.demo.services;
 
-import com.example.demo.entities.Card;
 import com.example.demo.entities.User;
 import com.example.demo.exceptions.ResourceNotFoundException;
 import com.example.demo.repositories.UserRepository;
@@ -15,9 +14,6 @@ public class UserServiceImpl implements IUserService {
 
     @Autowired
     private UserRepository userRepository;
-
-//optional
-    //stream
 
     public User updateEmail(Long id, String email) {
         User user = userRepository.findUserById(id);
@@ -77,7 +73,5 @@ public class UserServiceImpl implements IUserService {
     public User getByKeyword(String keyword){
         return userRepository.findUserByEmail(keyword);
     }
-
-
 
 }

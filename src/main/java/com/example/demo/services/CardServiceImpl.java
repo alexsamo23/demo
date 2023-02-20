@@ -65,8 +65,6 @@ public class CardServiceImpl implements ICardService {
             List<AccountTransaction> deposits = transactionsRepository.findByDateBetweenAndTypeAndCardId(AccountUtils.getStartOfDay(new Date()),
                     AccountUtils.getEndOfDay(new Date()), type, id);
 
-            //  if (withdrawals.size() >= 0) {
-
             for (AccountTransaction accountTransaction : deposits) {
                 total += accountTransaction.getAmount();
             }
@@ -104,8 +102,6 @@ public class CardServiceImpl implements ICardService {
                 List<AccountTransaction> withdrawals = transactionsRepository.findByDateBetweenAndTypeAndCardId(AccountUtils.getStartOfDay(new Date()),
                         AccountUtils.getEndOfDay(new Date()),type ,id);
 
-                //  if (withdrawals.size() >= 0) {
-
                 for (AccountTransaction accountTransaction : withdrawals) {
                     total += accountTransaction.getAmount();
                 }
@@ -125,7 +121,7 @@ public class CardServiceImpl implements ICardService {
                     card.setSold(card.getSold() - amount);
                     cardRepository.save(card);
                 }
-                // }
+
                 return card;
             } else {
                 throw new InvalidWithdrawException("Fonduri insuficiente");

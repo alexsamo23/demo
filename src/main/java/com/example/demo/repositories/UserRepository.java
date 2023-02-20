@@ -2,19 +2,14 @@ package com.example.demo.repositories;
 
 import com.example.demo.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
 
-@Repository // nu e necesar?
+@Repository
 public interface UserRepository extends JpaRepository<User,Long> {
 
-    public User findUserByFirstName(String firstName);
-    public User findUserByEmail(String email);
-    public User findUserById(Long id);
-   //Optional<User> findUserByEmail(String email);
+     User findUserByFirstName(String firstName);
+     User findUserByEmail(String email);
+     User findUserById(Long id);
 
-
-    //   public void deleteUserByEmail(String email);
 }

@@ -19,11 +19,11 @@ public class ExceptionController {
     }
     @ExceptionHandler(value = ResourceNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public String//ErrorResponse
+    public String
     handleResourceNotFoundException(ResourceNotFoundException ex,Model model)
     {
         model.addAttribute("ex",ex);
-        return "error"; //new ErrorResponse(HttpStatus.NOT_FOUND.value(), ex.getMessage());
+        return "error";
     }
 
 }

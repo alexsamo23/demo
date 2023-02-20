@@ -1,8 +1,6 @@
 package com.example.demo.controllers;
 
 import com.example.demo.entities.AccountTransaction;
-import com.example.demo.entities.Card;
-import com.example.demo.entities.User;
 import com.example.demo.services.IAccountTransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -27,7 +25,7 @@ public class AccountTransactionController {
         return "viewHistory";
     }
     @PostMapping("/searchTransactions")
-    public String getByKeyword(Model model,Long id) {
+    public String getTransactionsById(Model model,Long id) {
         if(id!=null) {
             List<AccountTransaction> transactions = accountTransactionService.getAllTransactionsWithId(id);
             model.addAttribute("transactions", transactions);

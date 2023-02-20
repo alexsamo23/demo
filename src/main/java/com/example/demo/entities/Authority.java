@@ -7,7 +7,6 @@ import lombok.*;
 import java.util.Set;
 
 @Entity
-
 @Table(name ="authorities")
 @Data
 public class Authority {

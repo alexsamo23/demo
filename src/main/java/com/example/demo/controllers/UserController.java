@@ -82,6 +82,7 @@ public class UserController {
     }
 
     @PostMapping("/search")
+    @PreAuthorize("hasAuthority('write')")
     public String getByKeyword(Model model, String keyword) {
         if(keyword!=null && keyword!="") {
              User user = userService.getByKeyword(keyword);

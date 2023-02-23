@@ -10,7 +10,6 @@ import com.example.demo.services.ICardService;
 import com.example.demo.services.IUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -22,28 +21,38 @@ import java.util.List;
 
 @Controller
 public class CardController {
-    @Autowired
-    private ICardService cardService;
-    @Autowired
-    private IUserService userService;
+
+    private final ICardService cardService;
+    private final IUserService userService;
     private final String page ="redirect:/userViewOwnCards";
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
+    public CardController(ICardService cardService, IUserService userService) {
+        this.cardService = cardService;
+        this.userService = userService;
+    }
+
     @GetMapping("/addNewCard")
+    @PreAuthorize("hasAuthority('write')")
     public String showAddCardForm(Card card,Model model) {
         model.addAttribute("card",card);
+        model.addAttribute("users",userService.getAllUsers());
 
         return "add_card_form";
     }
 
     @PostMapping("/processAddNewCard")
-    public String processCard(Card card) {
+    @PreAuthorize("hasAuthority('write')")
+    public String processCard(Card card, String email) {
+        //model.addAttribute("users",userService.getAllUsers());
+        card.setUser(userService.getUserWithEmail(email));
         cardService.saveCard(card);
 
         return "redirect:/adminViewCards/all";
     }
 
     @GetMapping("/editCard/{id}")
+    @PreAuthorize("hasAuthority('write')")
     public String editCardForm (@PathVariable("id") Long id, Model model) {
         model.addAttribute("card", cardService.getCardById(id));
 
@@ -122,6 +131,7 @@ public class CardController {
     }
 
     @PostMapping("/searchCards")
+    @PreAuthorize("hasAuthority('write')")
     public String getByKeyword(Model model, String keyword) {
         if(keyword!=null && keyword!="") {
             User user = userService.getUserWithEmail(keyword);
@@ -134,4 +144,57 @@ public class CardController {
         }
         return "viewCards";
     }
+
+    @GetMapping("/adminViewCardsAscending")
+    @PreAuthorize("hasAuthority('write')")
+    public String getCardsInAscendingOrder(Model model){
+        model.addAttribute("cards", cardService.getCardsInAscendingOrder());
+
+        return "viewCards";
+    }
+    @GetMapping("/adminViewCardsDescending")
+    @PreAuthorize("hasAuthority('write')")
+    public String getCardsInDescendingOrder(Model model){
+        model.addAttribute("cards", cardService.getCardsInDescendingOrder());
+
+        return "viewCards";
+    }
+    @GetMapping("/adminViewCardsActivated")
+    @PreAuthorize("hasAuthority('write')")
+    public String getAllActiveCards(Model model){
+        model.addAttribute("cards", cardService.getAllActiveCards());
+
+        return "viewCards";
+    }
+
+    @GetMapping("/adminViewCardsDeactivated")
+    @PreAuthorize("hasAuthority('write')")
+    public String getAllDeactivatedCards(Model model){
+        model.addAttribute("cards", cardService.getAllDeactivatedCards());
+
+        return "viewCards";
+    }
+    @GetMapping("/redirectToProperFilterEndpoint")
+    @PreAuthorize("hasAuthority('write')")
+    public String getAllDeactivatedCards(Model model,String filter_id){
+    String returnedPage;
+        switch(filter_id) {
+            case "Ascending":
+                returnedPage= "redirect:/adminViewCardsAscending";
+                break;
+            case "Descending":
+                returnedPage= "redirect:/adminViewCardsDescending";
+                break;
+            case "Activated":
+                returnedPage = "redirect:/adminViewCardsActivated";
+                break;
+            case "Deactivated":
+                returnedPage = "redirect:/adminViewCardsDeactivated";
+                break;
+            default:
+                returnedPage = "redirect:/adminViewCards/all";
+        }
+        return returnedPage;
+    }
+
 }

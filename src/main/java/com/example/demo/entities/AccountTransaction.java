@@ -26,7 +26,7 @@ public class AccountTransaction {
     @Column(name="date",nullable = false)
     private Date date;
     @Column(name="type",nullable = false)
-    private int type;
+    private String type;
     @ManyToOne
     @JoinColumn(name="card_id", nullable=false)
     private Card card;

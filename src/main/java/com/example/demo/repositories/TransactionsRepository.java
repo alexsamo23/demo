@@ -12,6 +12,6 @@ import java.util.List;
 @Repository
 public interface TransactionsRepository extends JpaRepository <AccountTransaction, Long> {
 
-    List<AccountTransaction> findByDateBetweenAndTypeAndCardId(Date StartOfDay, Date endOfDay,int type,Long id);
+    List<AccountTransaction> findByDateBetweenAndTypeAndCardId(Date StartOfDay, Date endOfDay,String type,Long id);
     public List<AccountTransaction> findAccountTransactionByCardId(Long id);
 }

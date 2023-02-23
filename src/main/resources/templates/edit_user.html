@@ -3,11 +3,9 @@
 <head>
     <meta charset="ISO-8859-1">
     <title>User Management System</title>
-    <link rel="stylesheet"
-          href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
-          crossorigin="anonymous">
+    <div th:insert = "~{bootstrap_fragment :: bootstrap_fragment}">  </div>
 </head>
+<div th:insert = "~{navbar :: navbar}">  </div>
 <body>
 <br>
 <br>
@@ -16,7 +14,7 @@
         <div class ="col-lg-6 col-md-6 col-sm-6 container justify-content-center card">
             <h1 class = "text-center"> Update User </h1>
             <div class = "card-body">
-                <form th:action="@{/admin/update/{id} (id=${user.id})}" th:object = "${user}" method="POST">
+                <form align="center" th:action="@{/admin/update/{id} (id=${user.id})}" th:object = "${user}" method="POST">
                     <div class ="form-group">
                         <label> User First Name </label>
                         <input

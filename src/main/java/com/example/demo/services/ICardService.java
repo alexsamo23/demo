@@ -1,6 +1,7 @@
 package com.example.demo.services;
 
 import com.example.demo.entities.Card;
+import com.example.demo.entities.User;
 import com.example.demo.exceptions.InvalidWithdrawException;
 
 import java.util.List;
@@ -19,4 +20,10 @@ public interface ICardService {
     Card saveCard(Card card);
     Card updateCard(Card card, Long id);
     String deleteCard(Long id);
+    List<Card> getCardsInAscendingOrder();
+    List<Card> getCardsInDescendingOrder();
+    List<Card> getAllActiveCards();
+    List<Card> getAllDeactivatedCards();
+
+
 }

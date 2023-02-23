@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
   <title>View cards</title>
   <div th:insert = "~{bootstrap_fragment :: bootstrap_fragment}">  </div>
@@ -22,15 +22,45 @@
   <div class = "row">
     <div class = "col-lg-3">
       <a th:href = "@{/addNewCard}" class = "btn btn-primary btn-sm mb-3"> Add Card</a>
+
     </div>
   </div>
+  <div>
+  <label>Filter:</label> <br>
+    <div>
+      <form method="GET" th:action="@{/redirectToProperFilterEndpoint}">
 
+
+    <select name="filter_id" >
+      <option>Please select the option</option>
+      <option value="Ascending" >Ascending</option>
+      <option value="Descending" >Descending</option>
+      <option value="Activated"  >Activated</option>
+      <option value="Deactivated" >Deactivated</option>
+    </select>
+
+        <button type="submit" class="btn btn-primary">submit</button>
+      </form>
+    <br>
+
+<script>
+  function gettingList() {
+
+        var selectItem = document.getElementById('itemsList').value;
+
+        //var address = "/adminViewCards"+selectedItem;
+        let endpointForOption = document.getElementById('itemList').id ;
+
+        return endpointForOption;
+    }
+</script>
+    </div>
+  </div>
   <table class = "table table-striped table-bordered">
     <thead class = "table-dark">
     <tr>
       <th> Id </th>
       <th>  Name</th>
-      <th>  Number</th>
       <th>  CVV </th>
       <th>  Expire Date </th>
       <th>  Iban </th>
@@ -47,12 +77,10 @@
     <tr th:each = "card: ${cards}">
       <td th:text = "${card.id}"></td>
       <td th:text = "${card.name}"></td>
-      <td th:text = "${card.number}"></td>
 
       <td>
-     <input type="password" name="CVV" th:value="${card.cvv}" id="object" + ${card.id} readonly/>
-       <!-- <i class="bi bi-eye-slash" id="togglePassword"></i> -->
-        <input type="checkbox" id="id${card.id}" onclick="myFunction('${card.id}')">Show CVV
+     <input type="password" name="CVV" th:value="${card.cvv}" th:id="${card.id}" readonly/>
+      <i class="bi bi-eye-slash" id="togglePassword" th:attr="onclick=|myFunction('${card.id}')|"></i>
         <script>
           function myFunction(password) {
             var x = document.getElementById(password);

@@ -2,6 +2,7 @@ package com.example.demo.services;
 import com.example.demo.entities.AccountTransaction;
 import com.example.demo.entities.AccountUtils;
 import com.example.demo.entities.Card;
+import com.example.demo.entities.User;
 import com.example.demo.exceptions.InvalidWithdrawException;
 import com.example.demo.exceptions.ResourceNotFoundException;
 import com.example.demo.repositories.CardRepository;
@@ -9,6 +10,7 @@ import com.example.demo.repositories.TransactionsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -16,10 +18,20 @@ import java.util.Optional;
 @Service
 public class CardServiceImpl implements ICardService {
 
-    @Autowired
-    private CardRepository cardRepository;
-    @Autowired
-    TransactionsRepository transactionsRepository;
+
+   private final CardRepository cardRepository;
+   private final TransactionsRepository transactionsRepository;
+   @Autowired
+    public CardServiceImpl(CardRepository cardRepository,TransactionsRepository transactionsRepository) {
+     this.cardRepository= cardRepository;
+     this.transactionsRepository= transactionsRepository;
+    }
+
+    enum Operation{
+    Deposit,
+    Withdraw,
+    ChangeLimit
+    }
 
     @Override
     public List<Card> getAllCreditCards(){
@@ -58,7 +70,7 @@ public class CardServiceImpl implements ICardService {
     @Override
     public Card deposit(Long id, int amount) throws InvalidWithdrawException {
         int total =0;
-        int type=2;
+        String type = String.valueOf(Operation.Deposit);
         Card card = cardRepository.findCardById(id);
         if(card.isStatus()) {
 
@@ -92,8 +104,8 @@ public class CardServiceImpl implements ICardService {
 
     @Override
     public Card withdraw(Long id, int amount) throws InvalidWithdrawException {
-    int total =0;
-    int type=1;
+        int total =0;
+        String type = String.valueOf(Operation.Withdraw);
         Card card = cardRepository.findCardById(id);
         if(card.isStatus()) {
 
@@ -133,7 +145,7 @@ public class CardServiceImpl implements ICardService {
 
     @Override
     public Card changeLimit(Long id, int limit) {
-        int type=3;
+        String type = String.valueOf(Operation.ChangeLimit);
         Card card = cardRepository.findCardById(id);
 
         AccountTransaction accountTransaction = new AccountTransaction();
@@ -191,5 +203,25 @@ public class CardServiceImpl implements ICardService {
             throw new ResourceNotFoundException("Card", "id", id);
         }
     }
+
+    @Override
+    public List<Card> getCardsInAscendingOrder(){
+        return cardRepository.findByOrderByNameAsc();
+    }
+    @Override
+    public List<Card> getCardsInDescendingOrder(){
+        return cardRepository.findByOrderByNameDesc();
+    }
+
+    @Override
+    public List<Card> getAllActiveCards(){
+        return cardRepository.findAllActiveCards();
+    }
+
+    @Override
+    public List<Card> getAllDeactivatedCards(){
+        return cardRepository.findAllDeactivatedCards();
+    }
+
 
 }

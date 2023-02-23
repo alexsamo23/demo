@@ -15,6 +15,7 @@ public class UserServiceImpl implements IUserService {
     @Autowired
     private UserRepository userRepository;
 
+
     public User updateEmail(Long id, String email) {
         User user = userRepository.findUserById(id);
         user.setEmail(email);

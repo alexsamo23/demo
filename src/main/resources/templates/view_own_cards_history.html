@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>View cards</title>
+  <div th:insert = "~{bootstrap_fragment :: bootstrap_fragment}">  </div>
+</head>
+
+<div th:insert = "~{navbar :: navbar}">  </div>
+<body>
+
+<div class ="container">
+  <div class = "row">
+    <h1> User cards </h1>
+  </div>
+
+  <table class = "table table-striped table-bordered">
+    <thead class = "table-dark">
+    <tr>
+      <th> Id </th>
+      <th>  Name</th>
+      <th>  Status </th>
+      <th> Actions </th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr th:each = "card: ${cards}">
+      <td th:text = "${card.id}"></td>
+      <td th:text = "${card.name}"></td>
+      <td th:text="${card.status} ? 'ACTIVATED' : 'DEACTIVATED'" />
+      <td>
+      <a th:href = "@{/ownCardHistory/{id} (id=${card.id})}"
+         class = "btn btn-primary">See history of transactions</a>
+      </td>
+    </tr>
+    </tbody>
+
+  </table>
+
+</div>
+</body>
+</html>

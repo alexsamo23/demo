@@ -43,11 +43,7 @@ public class RegistrationController {
             return "login";
 
         }
-        @GetMapping("/index")
-        public String viewIndexPage() {
-            return "index.html";
 
-        }
         @GetMapping("/")
         public String viewHomePage() {
             return "home.html";

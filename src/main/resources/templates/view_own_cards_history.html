@@ -29,7 +29,7 @@
       <td th:text = "${card.name}"></td>
       <td th:text="${card.status} ? 'ACTIVATED' : 'DEACTIVATED'" />
       <td>
-      <a th:href = "@{/ownCardHistory/{id} (id=${card.id})}"
+      <a th:href = "@{/ownCardHistory/1/{id} (id=${card.id})}"
          class = "btn btn-primary">See history of transactions</a>
       </td>
     </tr>

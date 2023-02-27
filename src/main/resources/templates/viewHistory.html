@@ -13,7 +13,7 @@
   <div class = "row">
     <h1> History </h1>
     <li sec:authorize="hasAuthority('write')">
-    <form th:action="@{/searchTransactions}" method="post">
+    <form th:action="@{/searchTransactions}" method="get">
       <input type="text" name="id" th:value="${id}"  placeholder="Find by Card ID" size="50" >
       <button type="submit" class="btn btn-info" >Search</button>
       <button type="submit" class="btn btn-info" >Reset</button>
@@ -45,7 +45,46 @@
     </tbody>
 
   </table>
+  <form>
+  <footer style="font-size: large" class="panel-footer">
+    <nav aria-label="Page navigation example">
+      Total Items [[${totalItems}]] : Page [[${currentPage}]] of [[${totalPages}]]
 
+      <ul class="pagination">
+        <li class="page-item">
+          <a th:object="${id}" class="page-link" th:if="${currentPage > 1}"  th:href="@{'/searchTransactions/1/'+${id}}"  >First</a>
+          <span th:unless="${currentPage > 1}">First</span>
+        </li>
+
+        <li class="page-item">
+
+          <a th:object="${id}" th:if="${currentPage > 1}" th:href="@{'/searchTransactions/' + ${currentPage - 1}+'/'+${id}}"  >Previous</a>
+          <span th:unless="${currentPage > 1}">Previous</span>
+        </li>
+
+        <li class="page-item">
+          <span th:each="i: ${#numbers.sequence(1, totalPages)}">
+           <a th:object="${id}" th:href="@{'/searchTransactions/'+ ${i}+'/'+${id}}"  >[[${i}]]</a>
+        &nbsp; &nbsp;
+           </span>
+        </li>
+
+        <li class="page-item">
+          <a th:object="${id}" th:if="${currentPage < totalPages}" th:href="@{'/searchTransactions/' + ${currentPage + 1}+'/'+${id}}" >Next</a>
+          <span th:unless="${currentPage < totalPages}">Next</span>
+        </li>
+
+        <li class="page-item">
+          <a th:object="${id}" th:if="${currentPage < totalPages}" th:href="@{'/searchTransactions/' + ${totalPages}+'/'+${id}}" >Last</a>
+          <span th:unless="${currentPage < totalPages}">Last</span>
+        </li>
+      </ul>
+    </nav>
+
+  </footer>
+  </form>
 </div>
 </body>
+<script>
+</script>
 </html>
